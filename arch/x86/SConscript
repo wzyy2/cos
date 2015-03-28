@@ -1,0 +1,19 @@
+Import('COS_ROOT')
+Import('settings')
+from building import *
+
+path = ['common', 'boot']
+path += 'cpu/' + settings.CPU
+
+src = []
+CPPPATH = []
+for item in path:
+    src += Glob(item + '/*.c') + Glob(item + '/*.S') + Glob(item + '/*.cpp')
+    
+
+CPPPATH += [os.path.abspath('include')]
+
+
+group = DefineGroup(settings.CPU.upper(), src, depend = [''], CPPPATH = CPPPATH)
+
+Return('group')

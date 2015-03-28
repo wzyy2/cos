@@ -1,0 +1,12 @@
+Import('COS_ROOT')
+Import('settings')
+
+from building import *
+import os
+
+src = Glob('*.c') + Glob('*.cpp')
+CPPPATH = [COS_ROOT + '/components' + '/Lwip']
+
+group = DefineGroup('Lwip', src, depend = ['CONFIG_LWIP'], CPPPATH = CPPPATH)
+
+Return('group')

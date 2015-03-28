@@ -1,0 +1,10 @@
+Import('COS_ROOT')
+Import('settings')
+from building import *
+
+src = Glob('*.c') + Glob('*.cpp')
+
+CPPPATH = [COS_ROOT + '/include']
+group = DefineGroup('Kernel', src, depend = [''], CPPPATH = CPPPATH)
+
+Return('group')
