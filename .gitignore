@@ -20,3 +20,4 @@ build
 *.a
 *.i
 *.d
+cos_conf.h
