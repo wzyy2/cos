@@ -1,5 +1,10 @@
 import os
 
+if os.getenv('COS_CC'):
+    PREFIX = os.getenv('COS_CC')
+else:
+    PREFIX = 'i386-elf-'
+
 # toolchains options
 ARCH='x86'
 CPU=''
@@ -10,7 +15,7 @@ BUILD = 'debug'
 EXEC_PATH="c:/gcc/"
 
 # toolchains
-PREFIX = 'i386-elf-'
+
 CC = PREFIX + 'gcc'
 AS = PREFIX + 'gcc'
 AR = PREFIX + 'ar'
@@ -21,6 +26,9 @@ OBJDUMP = PREFIX + 'objdump'
 OBJCPY = PREFIX + 'objcopy'
 
 DEVICE = ' -mtune=generic'
+if PREFIX != 'i386-elf-':
+    DEVICE += ' -m32'
+
 CFLAGS = DEVICE + ' -Wall'
 AFLAGS = ' -c' + DEVICE + ' -x assembler-with-cpp'
 LFLAGS = DEVICE + ' -nostartfiles -Wl,--gc-sections,-Map=target/x86/x86.map,-cref,-u,_start -T target/x86/x86.lds'
