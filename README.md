@@ -1,5 +1,6 @@
 COS
 ===============
+[![Build Status](https://travis-ci.org/wzyy2/cos.png)](https://travis-ci.org/wzyy2/cos)
 
 Introduction
 ------------
