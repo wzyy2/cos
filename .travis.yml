@@ -14,4 +14,4 @@ script:
   - scons target=$TARGET
 
 env:
-  - TARGET='x86' COS_CC = '' 
+  - TARGET='x86' COS_CC = 'gcc' 

@@ -1,7 +1,7 @@
 import os
 
-if os.getenv('COS_CC'):
-    PREFIX = os.getenv('COS_CC')
+if os.getenv('COS_CC') == 'gcc' :
+    PREFIX = ''
 else:
     PREFIX = 'i386-elf-'
 
