@@ -23,6 +23,7 @@ TARGET = 'cos.' + settings.TARGET_EXT
 env = Environment(ENV = os.environ,
     AS = settings.AS, ASFLAGS = settings.AFLAGS,
     CC = settings.CC, CCFLAGS = settings.CFLAGS,
+    CXX = settings.CXX, CXXFLAGS = settings.CXXFLAGS,
     AR = settings.AR, ARFLAGS = '-rc',
     LINK = settings.LINK, LINKFLAGS = settings.LFLAGS)
 

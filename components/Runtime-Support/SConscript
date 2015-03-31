@@ -1,5 +1,5 @@
-Import('COS_ROOT')
-Import('settings')
+# for module compiling
+import os
 from building import *
 
 objs = []
@@ -11,9 +11,9 @@ for item in list:
         objs = objs + SConscript(os.path.join(item, 'SConscript'))
 
 
-CPPPATH = [os.path.join(cwd, 'include')]
-group = DefineGroup("x86-inc" , [], depend = [''], CPPPATH = CPPPATH)
-objs += group
+src = Glob('*.c') + Glob('*.cpp') + Glob('*.S') 
+CPPPATH = [cwd]
+group = DefineGroup('runtime', src, depend = [],
+                    CPPPATH = CPPPATH)
 
 Return('objs')
-

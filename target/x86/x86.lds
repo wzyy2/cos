@@ -9,27 +9,33 @@ SECTIONS
     . = ALIGN(4);
     .text :
     {
+        /* First put the multiboot header, as it is required to be put very early
+           early in the image or the bootloader won't recognize the file format.
+           Next we'll put the .text section. */
         *(.init)
         *(.text)
 
-        /* section information for finsh shell */
+        /* section information for initial. */
         . = ALIGN(4);
-        __fsymtab_start = .;
-        KEEP(*(FSymTab))
-        __fsymtab_end = .;
+        __cos_init_start = .;
+        KEEP(*(SORT(.cos_init_fn*)))
+        __cos_init_end = .;
         . = ALIGN(4);
-        __vsymtab_start = .;
-        KEEP(*(VSymTab))
-        __vsymtab_end = .;
-        . = ALIGN(4);   
-      }
-    
+
+    }
+    /* Read-only data. */
     . = ALIGN(4);
     .rodata : { *(.rodata) }
-
+    /* Read-write data (initialized) */
     . = ALIGN(4);
-    .data : { *(.data) }
+    .data : 
+    { 
+         __CTOR_LIST__ = .; LONG((__CTOR_END__ - __CTOR_LIST__) / 4 - 2) *(.ctors)   LONG(0) __CTOR_END__ = .; 
+        __DTOR_LIST__ = .; LONG((__DTOR_END__ - __DTOR_LIST__) / 4 - 2) *(.dtors) LONG(0) __DTOR_END__ = .; 
+        *(.data) 
 
+    }
+    /* Read-write data (uninitialized) and stack */
     . = ALIGN(4);
     __bss_start = .;
     .bss : { *(.bss) }

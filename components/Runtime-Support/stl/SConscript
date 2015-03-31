@@ -1,0 +1,12 @@
+Import('settings')
+from building import *
+
+cwd = GetCurrentDir()
+src = Glob('*.c') + Glob('*.cpp') + Glob('*.S') 
+CPPPATH = [cwd]
+
+
+group = DefineGroup('libstl', src, depend = [],
+                    CPPPATH = CPPPATH)
+
+Return('group')

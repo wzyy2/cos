@@ -6,7 +6,8 @@ cwd  = GetCurrentDir()
 
 src = Glob('*.c') + Glob('*.cpp') + Glob('*.S')
 
-CPPPATH = [cwd, COS_ROOT + '/include']
-group = DefineGroup('Kernel', src, depend = [''], CPPPATH = CPPPATH)
+CPPPATH = [cwd]
+
+group = DefineGroup('x86-boot', src, depend = [''], CPPPATH = CPPPATH)
 
 Return('group')

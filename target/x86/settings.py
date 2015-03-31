@@ -1,8 +1,8 @@
-import os
+import os,platform
 
-if os.getenv('COS_CC') == 'gcc' :
-    PREFIX = ''
-else:
+
+PREFIX = ''
+if platform.system() == 'Darwin':
     PREFIX = 'i386-elf-'
 
 # toolchains options
@@ -17,21 +17,28 @@ EXEC_PATH="c:/gcc/"
 # toolchains
 
 CC = PREFIX + 'gcc'
+CXX = PREFIX + 'g++'
 AS = PREFIX + 'gcc'
 AR = PREFIX + 'ar'
-LINK = PREFIX + 'gcc'
+LINK = PREFIX + 'g++'
 TARGET_EXT = 'elf'
 SIZE = PREFIX + 'size'
 OBJDUMP = PREFIX + 'objdump'
 OBJCPY = PREFIX + 'objcopy'
 
 DEVICE = ' -mtune=generic'
+
+# 64 bit gcc
 if PREFIX != 'i386-elf-':
     DEVICE += ' -m32'
 
-CFLAGS = DEVICE + ' -Wall'
+CFLAGS = DEVICE + ' -Wall '
 AFLAGS = ' -c' + DEVICE + ' -x assembler-with-cpp'
 LFLAGS = DEVICE + ' -nostartfiles -Wl,--gc-sections,-Map=target/x86/x86.map,-cref,-u,_start -T target/x86/x86.lds'
+
+CXXFLAGS = " -ffreestanding -fno-builtin  -nostdinc++ -fno-rtti -fno-exceptions"
+
+
 
 CPATH = ''
 LPATH = ''

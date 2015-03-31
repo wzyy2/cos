@@ -1,0 +1,17 @@
+Import('settings')
+from building import *
+
+cwd = GetCurrentDir()
+src = Glob('*.c') + Glob('*.cpp') + Glob('*.S') 
+CPPPATH = [cwd]
+
+# link with libc and libm:
+# libm is a frequently used lib. Newlib is compiled with -ffunction-sections in
+# recent GCC tool chains. The linker would just link in the functions that have
+# been referenced. So setting this won't result in bigger text size.
+LIBS = ['c', 'm']
+
+group = DefineGroup('newlib', src, depend = [],
+                    CPPPATH = CPPPATH, LIBS = LIBS)
+
+Return('group')
