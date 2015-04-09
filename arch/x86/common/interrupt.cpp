@@ -38,7 +38,7 @@ extern void arch_interrupt_handle(int vector, void *param);
 void arch_idt_init(void)
 {	
     extern long Xdefault;
-    int i, j, func;
+    unsigned int i, j, func;
 
     for(i=0; i<MAX_HANDLERS; i++)
     {
@@ -79,7 +79,7 @@ void arch_idt_init(void)
  *@param trapno the trap number
  *
  */
-void arch_trap_irq(int trapno)
+extern "C" void arch_trap_irq(int trapno)
 {
     switch(trapno)
     {

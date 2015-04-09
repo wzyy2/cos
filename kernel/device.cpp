@@ -185,7 +185,7 @@ size_t Device::write(off_t    pos,
                           size_t   size)
 {
     COS_ASSERT(dev != NULL);
-    vid.write("222");
+
     if (ref_count_ == 0)
     {
         set_errno(-ERR_ERROR);
@@ -193,7 +193,6 @@ size_t Device::write(off_t    pos,
     }
 
     /* call device write interface */
-    vid.write("111");
     return driver_write(pos, buffer, size);
 }
 

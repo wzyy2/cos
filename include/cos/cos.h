@@ -9,16 +9,16 @@
 #include <cos/irq.h>
 #include <cos/memheap.h>
 #include <cos/kservice.h>
-
-
+#include <cos/init.h>
 
 #ifdef __cplusplus
 
 #include <cos/device.h>
 
-#include "Video.h"
-extern Video vid;
+#endif
 
+
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -28,9 +28,5 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-
-
-
 
 #endif /* _COS_H */

@@ -75,24 +75,22 @@ typedef base_t                       off_t;       /**< Type for offset */
 
 /* initialization export */
 
-typedef int (*init_fn_t)(void);
+typedef void (*init_fn_t)(void);
 
 #define INIT_EXPORT(fn, level)  \
-    const init_fn_t __cos_init_##fn SECTION(".cos_init_fn."level) = fn
+    const init_fn_t __cos_init_##fn SECTION(".cos_init_fn."#level) = fn
 
 
-/* board init routines will be called in board_init() function */
-#define INIT_BOARD_EXPORT(fn)           INIT_EXPORT(fn, "1")
 /* device initialization */
-#define INIT_DEVICE_EXPORT(fn)          INIT_EXPORT(fn, "2")
+#define INIT_DEVICE_EXPORT(fn)          INIT_EXPORT(fn, "1")
 /* components initialization */
-#define INIT_COMPONENT_EXPORT(fn)       INIT_EXPORT(fn, "3")
+#define INIT_COMPONENT_EXPORT(fn)       INIT_EXPORT(fn, "2")
 /* file system initialization */
-#define INIT_FS_EXPORT(fn)              INIT_EXPORT(fn, "4")
+#define INIT_FS_EXPORT(fn)              INIT_EXPORT(fn, "3")
 /* environment initialization  */
-#define INIT_ENV_EXPORT(fn)             INIT_EXPORT(fn, "5")
+#define INIT_ENV_EXPORT(fn)             INIT_EXPORT(fn, "4")
 /* appliation initialization */
-#define INIT_APP_EXPORT(fn)             INIT_EXPORT(fn, "6")
+#define INIT_APP_EXPORT(fn)             INIT_EXPORT(fn, "5")
 
 
 /**

@@ -3,7 +3,6 @@
 
 #include <cos/cosDef.h>
 
-
 #include <arch/interrupt.h>
 
 

@@ -87,32 +87,12 @@
     }                                                                             \
     while (0)
 
-/* "In thread context" means:
- *     1) the scheduler has been started
- *     2) not in interrupt context.
- */
-#define COS_DEBUG_IN_THREAD_CONTEXT                                            \
-    do                                                                            \
-{                                                                             \
-    base_t level;                                                          \
-    level = arch_interrupt_disable();                                        \
-    if (rt_thread_self() == NULL)                                          \
-{                                                                         \
-    printk("Function[%s] shall not be used before scheduler start\n", \
-    __FUNCTION__);                                             \
-    COS_ASSERT(0)                                                          \
-    }                                                                         \
-    COS_DEBUG_NOT_IN_INTERRUPT;                                                \
-    arch_interrupt_enable(level);                                            \
-    }                                                                             \
-    while (0)
 
 #else /* COS_DEBUG */
 
 #define COS_ASSERT(EX)
 #define COS_DEBUG_LOG(type, message)
 #define COS_DEBUG_NOT_IN_INTERRUPT
-#define COS_DEBUG_IN_THREAD_CONTEXT
 
 
 #endif /* COS_DEBUG */

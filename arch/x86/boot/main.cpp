@@ -22,13 +22,13 @@ const char sasasa[100] = {
     1,2,3,4,5,6,1,2,3,
 };
 
-Video vid;
-
 int main(){
     /* clear .bss */
     clear_bss();
+
     /* init hardware interrupt */
     arch_interrupt_init();
+
     /* init memory system */
     /* RAM 32M */
     system_heap_init((void *)&__bss_end, (void *)(1024UL*1024*32));
@@ -36,14 +36,10 @@ int main(){
     /* init the c\c++ runtime environment */
     runtime_boot_strap();
 
-    vid.clear();
-    vid.write("Hello World!");
-
-    Console *con = Console::Instance();
-
+    /*init the console*/
+    Console::Instance();
     console_set_device("console");
-    con->write(0, "fuck you", 5);
-
+    export_runtime_init();
     while(1);
 
     /* exit the c\c++ runtime environment */
