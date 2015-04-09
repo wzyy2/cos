@@ -1,11 +1,7 @@
-#include <cos.h>
-#include <cosHw.h>
+#include "cos/irq.h"
 
-/**
- * @addtogroup Kernel
- */
-
-/*@{*/
+#include <cos/cos.h>
+#include <cos/cosHw.h>
 
 volatile uint8_t interrupt_nest;
 
@@ -20,7 +16,7 @@ void interrupt_enter(void)
 {
     base_t level;
 
-    COS_DEBUG_LOG(RT_DEBUG_IRQ, ("irq coming..., irq nest:%d\n",
+    COS_DEBUG_LOG(COS_DEBUG_IRQ, ("irq coming..., irq nest:%d\n",
                                 cos_interrupt_nest));
 
     level = arch_interrupt_disable();
@@ -61,7 +57,3 @@ uint8_t interrupt_get_nest(void)
 {
     return interrupt_nest;
 }
-
-
-/*@}*/
-

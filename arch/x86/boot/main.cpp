@@ -1,22 +1,16 @@
-#include <cos.h>
-#include <cosHw.h>
+#include <cos/cos.h>
+#include <cos/cosHw.h>
+#include <cos/runtime.h>
 
-#include <libc.h>
-
-//#include "Console.h"
+#include "console.h"
 #include "Video.h"
 
-/**
- * @addtogroup x86
- */
-
- /*@{*/
 
 extern unsigned char __bss_start[];
 extern unsigned char __bss_end[];
 
 /* clear .bss */
-static void cos_clear_bss(void)
+static void clear_bss(void)
 {
     unsigned char *dst;
     dst = __bss_start;
@@ -24,28 +18,38 @@ static void cos_clear_bss(void)
         *dst++ = 0;
 }
 
-extern void* operator new(size_t size);
+const char sasasa[100] = {
+    1,2,3,4,5,6,1,2,3,
+};
+
+Video vid;
 
 int main(){
     /* clear .bss */
-    cos_clear_bss();
-
+    clear_bss();
     /* init hardware interrupt */
     arch_interrupt_init();
-
-    libc_system_init("NULL");
-
     /* init memory system */
-    /* RAM 16M */
-    system_heap_init((void *)&__bss_end, (void *)(1024UL*1024*8));
+    /* RAM 32M */
+    system_heap_init((void *)&__bss_end, (void *)(1024UL*1024*32));
 
-    Video *vid = new Video;
-    vid->clear();
-    vid->write("Hello World!");
+    /* init the c\c++ runtime environment */
+    runtime_boot_strap();
+
+    vid.clear();
+    vid.write("Hello World!");
+
+    Console *con = Console::Instance();
+
+    console_set_device("console");
+    con->write(0, "fuck you", 5);
+
+    while(1);
+
+    /* exit the c\c++ runtime environment */
+    runtime_exit();
 
 
     return 0;
 }
-
- /*@{*/
 

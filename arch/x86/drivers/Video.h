@@ -6,7 +6,7 @@ class Video{
         Video();
         ~Video();
         void clear();
-        void write(char *cp);
+        void write(const char *cp);
         void put(char c);
     private:
         unsigned short *videomem;

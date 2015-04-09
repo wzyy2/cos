@@ -21,3 +21,7 @@ build
 *.i
 *.d
 cos_conf.h
+*.config
+*.files
+*.includes
+*.creator

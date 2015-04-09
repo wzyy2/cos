@@ -7,6 +7,8 @@ SECTIONS
     . = 0x00100000;
     
     . = ALIGN(4);
+
+    /* code(readonly) */
     .text :
     {
         /* First put the multiboot header, as it is required to be put very early
@@ -26,15 +28,25 @@ SECTIONS
     /* Read-only data. */
     . = ALIGN(4);
     .rodata : { *(.rodata) }
+
+
     /* Read-write data (initialized) */
     . = ALIGN(4);
     .data : 
     { 
-         __CTOR_LIST__ = .; LONG((__CTOR_END__ - __CTOR_LIST__) / 4 - 2) *(.ctors)   LONG(0) __CTOR_END__ = .; 
-        __DTOR_LIST__ = .; LONG((__DTOR_END__ - __DTOR_LIST__) / 4 - 2) *(.dtors) LONG(0) __DTOR_END__ = .; 
-        *(.data) 
+        __CTOR_LIST__ = .; 
+        LONG((__CTOR_END__ - __CTOR_LIST__) / 4 - 2) 
+        KEEP(*(.ctors))
+        LONG(0) __CTOR_END__ = .; 
+        __DTOR_LIST__ = .; 
+        LONG((__DTOR_END__ - __DTOR_LIST__) / 4 - 2) 
+        KEEP(*(.dtors))
+        LONG(0) __DTOR_END__ = .; 
 
+        *(.data) 
     }
+
+    
     /* Read-write data (uninitialized) and stack */
     . = ALIGN(4);
     __bss_start = .;

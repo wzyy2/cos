@@ -34,11 +34,11 @@ if PREFIX != 'i386-elf-':
 
 CFLAGS = DEVICE + ' -Wall '
 AFLAGS = ' -c' + DEVICE + ' -x assembler-with-cpp'
-LFLAGS = DEVICE + ' -nostartfiles -Wl,--gc-sections,-Map=target/x86/x86.map,-cref,-u,_start -T target/x86/x86.lds'
+LFLAGS = DEVICE + '  -nodefaultlibs -nostartfiles -Wl,-Map=target/x86/x86.map,-cref,-u,_start -T target/x86/x86.lds'
 
-CXXFLAGS = " -ffreestanding -fno-builtin  -nostdinc++ -fno-rtti -fno-exceptions"
+CXXFLAGS = " -std=c++11 -ffreestanding -fno-builtin -nostdinc++ -fno-rtti -fno-exceptions -fno-threadsafe-statics"
 
-
+# -nostdinc++
 
 CPATH = ''
 LPATH = ''

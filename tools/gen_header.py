@@ -4,7 +4,7 @@ import sys
 
 
 def GenerateHeader(root_directory, BuildOptions):
-    gen_dir = root_directory + "/include/"
+    gen_dir = root_directory + "/include/cos/"
 
     HeaderFilename = gen_dir + 'cosConf.h'
 
