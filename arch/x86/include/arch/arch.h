@@ -2,11 +2,14 @@
 #define _ARCH_H_
 
 #include <asm/asm.h>
+#include <arch/grub.h>
+#include <arch/systick.h>
+#include <arch/interrupt.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+
 /*******************************************************************/
 /*  Timer Register  */
 /*******************************************************************/

@@ -29,9 +29,9 @@ namespace __cxxabiv1{
 extern "C" void * __cxa_allocate_exception(std::size_t thrown_size) throw(){
 	void *retval;
 	//The sizeof crap is required by Itanium ABI because we need to provide space for
-	//accounting information which is implementaion (gcc) specified
-	retval = malloc (thrown_size + sizeof(__cxa_exception));
-	if (0 == retval){
+    //accounting information which is implementaion (gcc) specified
+    retval = kmalloc (thrown_size + sizeof(__cxa_exception));
+    if (0 == retval){
 		std::terminate();
 	}
 	memset (retval, 0, sizeof(__cxa_exception));
@@ -39,7 +39,7 @@ extern "C" void * __cxa_allocate_exception(std::size_t thrown_size) throw(){
 }
 
 extern "C" void __cxa_free_exception(void *vptr) throw(){
-	free( (char *)(vptr) - sizeof(__cxa_exception) );
+    kfree( (char *)(vptr) - sizeof(__cxa_exception) );
 }
 
 
@@ -47,7 +47,7 @@ extern "C" __cxa_dependent_exception * __cxa_allocate_dependent_exception() thro
 	__cxa_dependent_exception *retval;
 	//The sizeof crap is required by Itanium ABI because we need to provide space for
 	//accounting information which is implementaion (gcc) specified
-	retval = static_cast<__cxa_dependent_exception*>(malloc (sizeof(__cxa_dependent_exception)));
+    retval = static_cast<__cxa_dependent_exception*>(kmalloc (sizeof(__cxa_dependent_exception)));
 	if (0 == retval){
 		std::terminate();
 	}
@@ -56,6 +56,6 @@ extern "C" __cxa_dependent_exception * __cxa_allocate_dependent_exception() thro
 }
 
 extern "C" void __cxa_free_dependent_exception(__cxa_dependent_exception *vptr) throw(){
-	free( (char *)(vptr) );
+    kfree( (char *)(vptr) );
 }
 }

@@ -9,6 +9,6 @@
 void libc_system_init(const char* tty_name)
 {
 	/* set PATH and HOME */
-	putenv("PATH=/");
-	putenv("HOME=/");
+//	putenv("PATH=/");
+//	putenv("HOME=/");
 }

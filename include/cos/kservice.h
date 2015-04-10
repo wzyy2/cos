@@ -12,6 +12,8 @@ extern "C" {
 /*
  * general kernel service
  */
+void show_version(void);
+
 void printk(const char *fmt, ...);
 
 err_t get_errno(void);

@@ -45,7 +45,7 @@ typedef struct multiboot_info
 	unsigned long mods_addr;
 	union
 	{
-		aout_symbol_table_t aout_sym;
+        //aout_symbol_table_t aout_sym;
 		elf_section_header_table_t elf_sec;
 	} u;
 	unsigned long mmap_length;

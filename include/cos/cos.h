@@ -10,6 +10,8 @@
 #include <cos/memheap.h>
 #include <cos/kservice.h>
 #include <cos/init.h>
+#include <cos/clock.h>
+#include <cos/runtime.h>
 
 #ifdef __cplusplus
 

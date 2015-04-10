@@ -1,5 +1,5 @@
 #include "cos/runtime.h"
-#include "libc.h"
+//#include "libc.h"
 
 #include <cos/cos.h>
 #include <cos/cosHw.h>
@@ -32,7 +32,7 @@ void runtime_boot_strap()
         constructor++;
     }
 
-    libc_system_init("NULL");
+    //libc_system_init("NULL");
 }
 
 /*
@@ -92,6 +92,7 @@ extern "C" void __pure_virtual()
 extern "C" void abort()
 {
 	printk("abort()\n");
+    while(1);
 }
 
 namespace std{

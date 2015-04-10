@@ -32,7 +32,7 @@ DEVICE = ' -mtune=generic'
 if PREFIX != 'i386-elf-':
     DEVICE += ' -m32'
 
-CFLAGS = DEVICE + ' -Wall '
+CFLAGS = DEVICE + ' -Wall'
 AFLAGS = ' -c' + DEVICE + ' -x assembler-with-cpp'
 LFLAGS = DEVICE + '  -nodefaultlibs -nostartfiles -Wl,-Map=target/x86/x86.map,-cref,-u,_start -T target/x86/x86.lds'
 

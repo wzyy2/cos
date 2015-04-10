@@ -50,21 +50,15 @@ typedef base_t                       off_t;       /**< Type for offset */
 /*@}*/
 
 /* maximum value of base type */
-//#define UINT8_MAX                    0xff            /**< Maxium number of UINT8 */
-//#define UINT16_MAX                   0xffff          /**< Maxium number of UINT16 */
-//#define UINT32_MAX                   0xffffffff      /**< Maxium number of UINT32 */
+#undef UINT8_MAX
+#undef UINT16_MAX
+#undef UINT32_MAX
+#define UINT8_MAX                    0xff            /**< Maxium number of UINT8 */
+#define UINT16_MAX                   0xffff          /**< Maxium number of UINT16 */
+#define UINT32_MAX                   0xffffffff      /**< Maxium number of UINT32 */
 #define TICK_MAX                     UINT32_MAX   /**< Maxium number of tick */
 
 /* Compiler Related Definitions */
-              
-
-/* va_start */
-/* the version of GNU GCC must be greater than 4.x */
-// typedef __builtin_va_list   __gnuc_va_list;
-// typedef __gnuc_va_list      va_list;
-// #define va_start(v,l)       __builtin_va_start(v,l)
-// #define va_end(v)           __builtin_va_end(v)
-// #define va_arg(v,l)         __builtin_va_arg(v,l)
 
 #define SECTION(x)                  __attribute__((section(x)))
 #define UNUSED                      __attribute__((unused))
@@ -81,16 +75,18 @@ typedef void (*init_fn_t)(void);
     const init_fn_t __cos_init_##fn SECTION(".cos_init_fn."#level) = fn
 
 
+/* system initialization */
+#define INIT_SYSTEM_EXPORT(fn)          INIT_EXPORT(fn, "1")
 /* device initialization */
-#define INIT_DEVICE_EXPORT(fn)          INIT_EXPORT(fn, "1")
+#define INIT_DEVICE_EXPORT(fn)          INIT_EXPORT(fn, "2")
 /* components initialization */
-#define INIT_COMPONENT_EXPORT(fn)       INIT_EXPORT(fn, "2")
+#define INIT_COMPONENT_EXPORT(fn)       INIT_EXPORT(fn, "3")
 /* file system initialization */
-#define INIT_FS_EXPORT(fn)              INIT_EXPORT(fn, "3")
+#define INIT_FS_EXPORT(fn)              INIT_EXPORT(fn, "4")
 /* environment initialization  */
-#define INIT_ENV_EXPORT(fn)             INIT_EXPORT(fn, "4")
+#define INIT_ENV_EXPORT(fn)             INIT_EXPORT(fn, "5")
 /* appliation initialization */
-#define INIT_APP_EXPORT(fn)             INIT_EXPORT(fn, "5")
+#define INIT_APP_EXPORT(fn)             INIT_EXPORT(fn, "6")
 
 
 /**

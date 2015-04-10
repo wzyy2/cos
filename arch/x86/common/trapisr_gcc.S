@@ -71,7 +71,7 @@ _traps:
 	addl $0x2c,%eax		/*get trapno*/
 	movl (%eax),%eax
 	pushl %eax			/*push trapno*/
-	call arch_trap_irq
+        call arch_trap_irq
 	addl $4,%esp
 	call interrupt_leave
 	popl %esp

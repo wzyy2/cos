@@ -2,7 +2,6 @@
 #define _DEVICE_H
 
 #include <cos/cosDef.h>
-
 #include <cos/object.h>
 
 /**
@@ -123,7 +122,7 @@ protected:
     void  *user_data;                /**< device private data */
 private:
     device_class_type type_;        /**< device type */
-    uint16_t    flag_;                     /**< device flag */
+    //uint16_t    flag_;                     /**< device flag */
     uint16_t    open_flag_;                /**< device open flag */
 
     uint8_t ref_count_;                /**< reference count */

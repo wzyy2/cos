@@ -23,6 +23,6 @@
 
 #ifndef NO_NOTHROW
 _UCXXEXPORT void operator delete[](void* ptr, const std::nothrow_t& ) throw(){
-	free(ptr);
+    kfree(ptr);
 }
 #endif

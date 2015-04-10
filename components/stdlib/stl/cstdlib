@@ -23,6 +23,11 @@
 #define __HEADER_CSTDLIB 1
 
 
+extern "C" void *kmalloc(size_t nbytes);
+extern "C" void kfree(void *ptr);
+extern "C" void *krealloc(void *ptr, size_t nbytes);
+extern "C" void *kcalloc(size_t count, size_t size);
+
 namespace std{
 #if ! defined(__AVR__)
 	using ::atexit;

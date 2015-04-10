@@ -10,6 +10,23 @@ static Device *_console_device = NULL;
 /* global errno in cos */
 static volatile int _errno;
 
+/**
+ * This function will show the version of cos rtos
+ */
+
+void show_version(void)
+{
+    printk("\n _____   _____   _____  \n");
+    printk("/  ___| /  _  \\ /  ___/ \n");
+    printk("| |     | | | | | |___  \n");
+    printk("| |     | | | | \\___  \\ \n");
+    printk("| |___  | |_| |  ___| | \n");
+    printk("\\_____| \\_____/ /_____/ \n");
+    printk(" %d.%d.%d build %s\n",
+               C_VERSION, C_SUBVERSION, C_REVISION, __DATE__);
+    printk(" 2015 - 2021 Copyright by Jacob Chen \n");
+}
+
 /*
  * This function will get errno and clear errno
  *
@@ -146,226 +163,3 @@ void printk(const char *fmt, ...)
 
     va_end(args);
 }
-
-
-
-//int32_t  vsnprintf(char       *buf,
-//                        size_t   size,
-//                        const char *fmt,
-//                        va_list     args)
-//{
-
-//    unsigned long long num;
-
-//    int i, len;
-//    char *str, *end, c;
-//    const char *s;
-
-//    uint8_t base;            /* the base of number */
-//    uint8_t flags;           /* flags to print number */
-//    uint8_t qualifier;       /* 'h', 'l', or 'L' for integer fields */
-//    int32_t field_width;     /* width of output field */
-
-//    str = buf;
-//    end = buf + size - 1;
-
-//    /* Make sure end is always >= buf */
-//    if (end < buf)
-//    {
-//        end  = ((char *)-1);
-//        size = end - buf;
-//    }
-
-//    for (; *fmt ; ++fmt)
-//    {
-//        if (*fmt != '%')
-//        {
-//            if (str <= end)
-//                *str = *fmt;
-//            ++ str;
-//            continue;
-//        }
-
-//        /* process flags */
-//        flags = 0;
-
-//        while (1)
-//        {
-//            /* skips the first '%' also */
-//            ++ fmt;
-//            if (*fmt == '-') flags |= LEFT;
-//            else if (*fmt == '+') flags |= PLUS;
-//            else if (*fmt == ' ') flags |= SPACE;
-//            else if (*fmt == '#') flags |= SPECIAL;
-//            else if (*fmt == '0') flags |= ZEROPAD;
-//            else break;
-//        }
-
-//        /* get field width */
-//        field_width = -1;
-//        if (isdigit(*fmt)) field_width = skip_atoi(&fmt);
-//        else if (*fmt == '*')
-//        {
-//            ++ fmt;
-//            /* it's the next argument */
-//            field_width = va_arg(args, int);
-//            if (field_width < 0)
-//            {
-//                field_width = -field_width;
-//                flags |= LEFT;
-//            }
-//        }
-
-//        /* get the conversion qualifier */
-//        qualifier = 0;
-
-//        if (*fmt == 'h' || *fmt == 'l' || *fmt == 'L')
-
-//        {
-//            qualifier = *fmt;
-//            ++ fmt;
-//            if (qualifier == 'l' && *fmt == 'l')
-//            {
-//                qualifier = 'L';
-//                ++ fmt;
-//            }
-//        }
-
-//        /* the default base */
-//        base = 10;
-
-//        switch (*fmt)
-//        {
-//        case 'c':
-//            if (!(flags & LEFT))
-//            {
-//                while (--field_width > 0)
-//                {
-//                    if (str <= end) *str = ' ';
-//                    ++ str;
-//                }
-//            }
-
-//            /* get character */
-//            c = (uint8_t)va_arg(args, int);
-//            if (str <= end) *str = c;
-//            ++ str;
-
-//            /* put width */
-//            while (--field_width > 0)
-//            {
-//                if (str <= end) *str = ' ';
-//                ++ str;
-//            }
-//            continue;
-
-//        case 's':
-//            s = va_arg(args, char *);
-//            if (!s) s = "(NULL)";
-
-//            len = rt_strlen(s);
-
-//            if (!(flags & LEFT))
-//            {
-//                while (len < field_width--)
-//                {
-//                    if (str <= end) *str = ' ';
-//                    ++ str;
-//                }
-//            }
-
-//            for (i = 0; i < len; ++i)
-//            {
-//                if (str <= end) *str = *s;
-//                ++ str;
-//                ++ s;
-//            }
-
-//            while (len < field_width--)
-//            {
-//                if (str <= end) *str = ' ';
-//                ++ str;
-//            }
-//            continue;
-
-//        case 'p':
-//            if (field_width == -1)
-//            {
-//                field_width = sizeof(void *) << 1;
-//                flags |= ZEROPAD;
-//            }
-
-//            str = print_number(str, end,
-//                               (long)va_arg(args, void *),
-//                               16, field_width, flags);
-
-//            continue;
-
-//        case '%':
-//            if (str <= end) *str = '%';
-//            ++ str;
-//            continue;
-
-//            /* integer number formats - set up the flags and "break" */
-//        case 'o':
-//            base = 8;
-//            break;
-
-//        case 'X':
-//            flags |= LARGE;
-//        case 'x':
-//            base = 16;
-//            break;
-
-//        case 'd':
-//        case 'i':
-//            flags |= SIGN;
-//        case 'u':
-//            break;
-
-//        default:
-//            if (str <= end) *str = '%';
-//            ++ str;
-
-//            if (*fmt)
-//            {
-//                if (str <= end) *str = *fmt;
-//                ++ str;
-//            }
-//            else
-//            {
-//                -- fmt;
-//            }
-//            continue;
-//        }
-
-//        if (qualifier == 'L')
-//            num = va_arg(args, long long);
-//        else if (qualifier == 'l')
-//        {
-//            num = va_arg(args, uint32_t);
-//            if (flags & SIGN) num = (int32_t)num;
-//        }
-//        else if (qualifier == 'h')
-//        {
-//            num = (rt_uint16_t)va_arg(args, int32_t);
-//            if (flags & SIGN) num = (rt_int16_t)num;
-//        }
-//        else
-//        {
-//            num = va_arg(args, uint32_t);
-//            if (flags & SIGN) num = (int32_t)num;
-//        }
-
-//        str = print_number(str, end, num, base, field_width, flags);
-
-//    }
-
-//    if (str <= end) *str = '\0';
-//    else *end = '\0';
-
-//    /* the trailing null byte doesn't count towards the total
-//    * ++str;
-//    */
-//    return str - buf;
-//}

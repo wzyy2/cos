@@ -59,9 +59,6 @@ void Object::detach()
 {
     register base_t temp;
 
-    /* object check */
-    COS_ASSERT(object != NULL);
-
     /* lock interrupt */
     temp = arch_interrupt_disable();
 

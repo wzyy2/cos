@@ -17,8 +17,7 @@ void interrupt_enter(void)
     base_t level;
 
     COS_DEBUG_LOG(COS_DEBUG_IRQ, ("irq coming..., irq nest:%d\n",
-                                cos_interrupt_nest));
-
+                                interrupt_nest));
     level = arch_interrupt_disable();
     interrupt_nest ++;
     arch_interrupt_enable(level);

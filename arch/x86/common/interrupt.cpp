@@ -84,13 +84,13 @@ extern "C" void arch_trap_irq(int trapno)
     switch(trapno)
     {
     case T_DIVIDE:
-        printf("Divide error interrupt\n");
+        printk("Divide error interrupt\n");
         COS_ASSERT(0);
     case T_PGFLT:
-        printf("Page fault interrupt\n");
+        printk("Page fault interrupt\n");
         COS_ASSERT(0);
     case T_GPFLT:
-        printf("General protection interrupt\n");
+        printk("General protection interrupt\n");
         COS_ASSERT(0);
     case T_DEFAULT:
         arch_interrupt_handle(T_DEFAULT, NULL);
@@ -103,7 +103,7 @@ extern "C" void arch_trap_irq(int trapno)
 
 void arch_interrupt_handle(int vector, void *param)
 {
-    printf("Unhandled interrupt  occured!!!\n");
+    printk("Unhandled interrupt  occured!!!\n");
     return;
 }
 
@@ -175,13 +175,13 @@ isr_handler_t arch_interrupt_install(int vector, isr_handler_t new_handler, void
 
 void arch_interrupt_enable(base_t level)
 {
-    __asm__ __volatile__("pushl %0 ; popfl": :"g" (level):"memory", "cc");
+    __asm__ __volatile__("pushl %0 ; popfl; sti":/* no output */ :"g" (level):"memory", "cc");
 }
 
 base_t arch_interrupt_disable()
 {
     base_t level;
-    __asm__ __volatile__("pushfl ; popl %0 ; cli":"=g" (level): :"memory");
+    __asm__ __volatile__("pushfl ; popl %0 ; cli":"=g" (level):/* no output */  :"memory");
     return level;
 }
 

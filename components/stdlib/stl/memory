@@ -102,7 +102,7 @@ public:
 
 template <class T> _UCXXEXPORT pair<T*, ptrdiff_t> get_temporary_buffer(ptrdiff_t n){
 	pair<T*, ptrdiff_t> retval;
-	retval.first = static_cast<T*>(malloc(n * sizeof(T)));
+	retval.first = static_cast<T*>(kmalloc(n * sizeof(T)));
 	if(retval.first == 0){
 		retval.second = 0;
 	}else{
@@ -112,7 +112,7 @@ template <class T> _UCXXEXPORT pair<T*, ptrdiff_t> get_temporary_buffer(ptrdiff_
 }
 
 template <class T> _UCXXEXPORT void return_temporary_buffer(T* p){
-	free(p);
+	kfree(p);
 }
 
 

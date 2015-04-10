@@ -83,8 +83,6 @@ const char *Console::charcode[4] =
 
 Console *Console::Instance()
 {
-
-
     if (self == NULL) {
         self = new Console;
         if(self != NULL && get_errno() == ERR_OK){
@@ -92,7 +90,8 @@ Console *Console::Instance()
             arch_interrupt_install(INTKEYBOARD, (isr_handler_t) Console::isr, NULL);
             arch_interrupt_umask(INTKEYBOARD);
         }else{
-
+            delete self;
+            self = NULL;
         }
     }
     return self;
@@ -103,6 +102,8 @@ bool Console::Destroy()
     delete self;
     self = NULL;
     arch_interrupt_mask(INTKEYBOARD);
+
+    return true;
 }
 
 Console::Console():Device(Device::Device_Class_Char,
@@ -373,17 +374,6 @@ void Console::isr(int vector)
             con->rx_indicate_(con, rx_length);
         }
     }
-}
-
-/**
- * This function initializes console
- *
- */
-void Console_board_init(void)
-{
-    Console *con = Console::Instance();
-
-
 }
 
 /*@}*/

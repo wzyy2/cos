@@ -1,6 +1,6 @@
 #include <cos/cos.h>
 #include <cos/cosHw.h>
-#include <cos/runtime.h>
+#include <arch/arch.h>
 
 #include "console.h"
 #include "Video.h"
@@ -22,6 +22,11 @@ const char sasasa[100] = {
     1,2,3,4,5,6,1,2,3,
 };
 
+
+extern "C" void test(){
+    printk("test!!!!!!\n");
+}
+
 int main(){
     /* clear .bss */
     clear_bss();
@@ -36,10 +41,22 @@ int main(){
     /* init the c\c++ runtime environment */
     runtime_boot_strap();
 
-    /*init the console*/
+    /* init the console*/
     Console::Instance();
     console_set_device("console");
+
+    /* init systick */
+    arch_tick_init();
+
+    /* show system version info*/
+    show_version();
+
+    /* export function runtime Initialization*/
     export_runtime_init();
+
+
+
+
     while(1);
 
     /* exit the c\c++ runtime environment */

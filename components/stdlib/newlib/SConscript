@@ -10,7 +10,7 @@ CPPPATH = [cwd]
 # recent GCC tool chains. The linker would just link in the functions that have
 # been referenced. So setting this won't result in bigger text size.
 LIBS = ['c', 'm']
-
+# LIBS = []
 group = DefineGroup('newlib', src, depend = [],
                     CPPPATH = CPPPATH, LIBS = LIBS)
 

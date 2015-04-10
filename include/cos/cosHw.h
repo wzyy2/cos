@@ -4,7 +4,7 @@
 #include <cos/cosDef.h>
 
 #include <arch/interrupt.h>
-
+#include <arch/systick.h>
 
 #ifdef __cplusplus
 extern "C" {
