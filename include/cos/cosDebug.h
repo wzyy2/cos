@@ -93,7 +93,7 @@
 #define COS_ASSERT(EX)
 #define COS_DEBUG_LOG(type, message)
 #define COS_DEBUG_NOT_IN_INTERRUPT
-
+#define COS_DEBUG_IN_THREAD_CONTEXT
 
 #endif /* COS_DEBUG */
 

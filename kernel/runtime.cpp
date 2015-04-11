@@ -1,8 +1,11 @@
 #include "cos/runtime.h"
-//#include "libc.h"
+#include "libc.h"
 
 #include <cos/cos.h>
 #include <cos/cosHw.h>
+
+/* Flag show that if cpp runtime had been down */
+bool runtime_down_flag = false;
 
 void * __dso_handle = 0; 
 
@@ -32,7 +35,9 @@ void runtime_boot_strap()
         constructor++;
     }
 
-    //libc_system_init("NULL");
+    libc_system_init("NULL");
+
+    runtime_down_flag = true;
 }
 
 /*

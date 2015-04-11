@@ -25,3 +25,4 @@ cos_conf.h
 *.files
 *.includes
 *.creator
+*.creator.user*

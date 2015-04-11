@@ -130,7 +130,7 @@ Device *console_set_device(const char *name)
 
         /* set new console device */
         _console_device = newd;
-        _console_device->open(DEVICE_OFLAG_RDWR | DEVICE_FLAG_STREAM);
+        _console_device->open(Device::OFLAG_RDWR | Device::FLAG_STREAM);
     }
 
     return old;

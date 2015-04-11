@@ -59,7 +59,7 @@ void tick_increase(void)
 //    }
 
     /* check timer */
-//    rt_timer_check();
+    Timer::check();
 }
 
 /**

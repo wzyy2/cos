@@ -1,7 +1,11 @@
-#include "cos/memheap.h"
+#include "cos/sysheap.h"
 
 #include <cos/cos.h>
+#include <cos/cosHw.h>
+#include <cos/semaphore.h>
 
+/* will only be created when runtime_bootstrap have been called */
+Semaphore heap_sem("heap", 1, IPC::FLAG_FIFO);
 
 #define HEAP_MAGIC 0x1ea0
 struct heap_mem
@@ -120,8 +124,6 @@ void system_heap_init(void *begin_addr, void *end_addr)
     heap_end->next  = mem_size_aligned + SIZEOF_STRUCT_MEM;
     heap_end->prev  = mem_size_aligned + SIZEOF_STRUCT_MEM;
 
-    //rt_sem_init(&heap_sem, "heap", 1, RT_IPC_FLAG_FIFO);
-
     /* initialize the lowest-free pointer to the start of the heap */
     lfree = (struct heap_mem *)heap_ptr;
 }
@@ -170,7 +172,8 @@ void *kmalloc(size_t size)
         size = MIN_SIZE_ALIGNED;
 
     /* take memory semaphore */
-    // rt_sem_take(&heap_sem, RT_WAITING_FOREVER);
+    if(runtime_down_flag)
+        heap_sem.take(IPC::WAITING_FOREVER);
 
     for (ptr = (uint8_t *)lfree - heap_ptr;
          ptr < mem_size_aligned - size;
@@ -238,7 +241,9 @@ void *kmalloc(size_t size)
                 COS_ASSERT(((lfree == heap_end) || (!lfree->used)));
             }
 
-            //rt_sem_release(&heap_sem);
+            if(runtime_down_flag)
+                heap_sem.release();
+
             COS_ASSERT((uint32_t)mem + SIZEOF_STRUCT_MEM + size <= (uint32_t)heap_end);
             COS_ASSERT((uint32_t)((uint8_t *)mem + SIZEOF_STRUCT_MEM) % CONFIG_ALIGN_SIZE == 0);
             COS_ASSERT((((uint32_t)mem) & (CONFIG_ALIGN_SIZE-1)) == 0);
@@ -287,14 +292,15 @@ void *krealloc(void *rmem, size_t newsize)
     /* allocate a new memory block */
     if (rmem == NULL)
         return kmalloc(newsize);
-
-    //rt_sem_take(&heap_sem, RT_WAITING_FOREVER);
+    if(runtime_down_flag)
+        heap_sem.take(IPC::WAITING_FOREVER);
 
     if ((uint8_t *)rmem < (uint8_t *)heap_ptr ||
         (uint8_t *)rmem >= (uint8_t *)heap_end)
     {
         /* illegal memory */
-        //rt_sem_release(&heap_sem);
+        if(runtime_down_flag)
+            heap_sem.release();
 
         return rmem;
     }
@@ -306,7 +312,8 @@ void *krealloc(void *rmem, size_t newsize)
     if (size == newsize)
     {
         /* the size is the same as */
-        //rt_sem_release(&heap_sem);
+        if(runtime_down_flag)
+            heap_sem.release();
 
         return rmem;
     }
@@ -329,11 +336,13 @@ void *krealloc(void *rmem, size_t newsize)
 
         plug_holes(mem2);
 
-        //rt_sem_release(&heap_sem);
+        if(runtime_down_flag)
+            heap_sem.release();
 
         return rmem;
     }
-    //rt_sem_release(&heap_sem);
+    if(runtime_down_flag)
+        heap_sem.release();
 
     /* expand memory */
     nmem = kmalloc(newsize);
@@ -409,6 +418,8 @@ void kfree(void *rmem)
                   (uint32_t)rmem,
                   (uint32_t)(mem->next - ((uint8_t *)mem - heap_ptr))));
 
+    if(runtime_down_flag)
+        heap_sem.take(IPC::WAITING_FOREVER);
 
     /* ... which has to be in a used state ... */
     COS_ASSERT(mem->used);
@@ -425,7 +436,9 @@ void kfree(void *rmem)
 
     /* finally, see if prev or next are free also */
     plug_holes(mem);
-    //rt_sem_release(&heap_sem);
+
+    if(runtime_down_flag)
+        heap_sem.release();
 }
 
 

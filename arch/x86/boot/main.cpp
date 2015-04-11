@@ -22,10 +22,13 @@ const char sasasa[100] = {
     1,2,3,4,5,6,1,2,3,
 };
 
-
-extern "C" void test(){
-    printk("test!!!!!!\n");
+void test1(void *){
+    printk("test1!!!!!\n");
 }
+void test2(void *){
+    printk("test2!!!!!\n");
+}
+
 
 int main(){
     /* clear .bss */
@@ -53,8 +56,6 @@ int main(){
 
     /* export function runtime Initialization*/
     export_runtime_init();
-
-
 
 
     while(1);

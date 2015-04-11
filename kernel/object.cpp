@@ -63,14 +63,15 @@ void Object::detach()
     temp = arch_interrupt_disable();
 
     /* remove from object container */
-    for (auto i = object_container_[type_].begin(); i != object_container_[type_].end(); i++)  
-    {  
-        if (i->second == this)  
-        {  
-            object_container_[type_].erase(i);  
-            break;
-        }  
-    }
+//    for (auto i = object_container_[type_].begin(); i != object_container_[type_].end(); i++)
+//    {
+//        if (i->second == this)
+//        {
+//            object_container_[type_].erase(i);
+//            break;
+//        }
+//    }
+    object_container_[type_].erase(name_);
 
     /* unlock interrupt */
     arch_interrupt_enable(temp);

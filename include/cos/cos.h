@@ -7,15 +7,17 @@
 
 
 #include <cos/irq.h>
-#include <cos/memheap.h>
+#include <cos/sysheap.h>
 #include <cos/kservice.h>
 #include <cos/init.h>
 #include <cos/clock.h>
-#include <cos/runtime.h>
+
 
 #ifdef __cplusplus
+#include <cos/runtime.h>
 
 #include <cos/device.h>
+#include <cos/timer.h>
 
 #endif
 

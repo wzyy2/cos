@@ -11,19 +11,21 @@ class Object
 public:
     enum object_class_type
     {
+        Object_Class_Semaphore, /**< The object is a semaphore. */
+        Object_Class_Mutex, /**< The object is a mutex. */
         Object_Class_Timer,  /**< The object is a timer. */
         Object_Class_Device,    /**< The object is a device */
         Object_Class_Unknown,   /**< The object is unknown. */
     };
 
-    explicit Object(object_class_type type, const char *name = NULL);
+    explicit Object(object_class_type type, const char *name);
     virtual  ~Object();
 
 protected:
     void detach();
     static Object *find(const char *name, object_class_type type);
 
-    uint16_t flag_;      /**< flag of kernel object */
+    uint16_t flag_ = 0;      /**< flag of kernel object */
     std::string       name_;    /**< name of kernel object */
     object_class_type type_;   /**< type of kernel object */
 

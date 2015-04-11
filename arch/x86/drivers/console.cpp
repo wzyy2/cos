@@ -107,7 +107,7 @@ bool Console::Destroy()
 }
 
 Console::Console():Device(Device::Device_Class_Char,
-                          "console", DEVICE_FLAG_RDWR | DEVICE_FLAG_INT_RX | DEVICE_FLAG_STREAM)
+                          "console", Device::FLAG_RDWR | Device::FLAG_INT_RX | Device::FLAG_STREAM)
 {
     memset(shiftcode, CTL, 29);
     memset(shiftcode + 29, SHIFT, 96);

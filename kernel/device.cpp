@@ -48,7 +48,7 @@ err_t Device::init()
     err_t result = ERR_OK;
 
     /* get device init handler */
-    if (!(flag_ & DEVICE_FLAG_ACTIVATED))
+    if (!(flag_ & Device::FLAG_ACTIVATED))
     {
         result = driver_init();
         if (result != ERR_OK)
@@ -58,7 +58,7 @@ err_t Device::init()
         }
         else
         {
-            flag_ |= DEVICE_FLAG_ACTIVATED;
+            flag_ |= Device::FLAG_ACTIVATED;
         }
     }
 
@@ -77,7 +77,7 @@ err_t Device::open(uint16_t oflag)
     err_t result = ERR_OK;
 
     /* if device is not initialized, initialize it. */
-    if (!(flag_ & DEVICE_FLAG_ACTIVATED))
+    if (!(flag_ & Device::FLAG_ACTIVATED))
     {
         result = driver_init();
         if (result != ERR_OK)
@@ -87,13 +87,13 @@ err_t Device::open(uint16_t oflag)
         }
         else
         {
-            flag_ |= DEVICE_FLAG_ACTIVATED;
+            flag_ |= Device::FLAG_ACTIVATED;
         }
     }
 
     /* device is a stand alone device and opened */
-    if ((flag_ & DEVICE_FLAG_STANDALONE) &&
-        (open_flag_ & DEVICE_OFLAG_OPEN))
+    if ((flag_ & Device::FLAG_STANDALONE) &&
+        (open_flag_ & Device::OFLAG_OPEN))
     {
         return -ERR_BUSY;
     }
@@ -104,7 +104,7 @@ err_t Device::open(uint16_t oflag)
     /* set open flag */
     if (result == ERR_OK || result == -ERR_NOSYS)
     {
-        open_flag_ = oflag | DEVICE_OFLAG_OPEN;
+        open_flag_ = oflag | Device::OFLAG_OPEN;
 
         ref_count_++;
         /* don't let bad things happen silently. If you are bitten by this assert,
@@ -137,7 +137,7 @@ err_t Device::close()
 
     /* set open flag */
     if (result == ERR_OK || result == -ERR_NOSYS)
-        open_flag_ = DEVICE_OFLAG_CLOSE;
+        open_flag_ = Device::OFLAG_CLOSE;
 
     return result;
 }
