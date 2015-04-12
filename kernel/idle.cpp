@@ -2,13 +2,10 @@
 
 #include <cos/cos.h>
 
-#define IDLE_THREAD_STACK_SIZE  512
+uint8_t Idle::thread_stack[1024];
 
-ALIGN(CONFIG_ALIGN_SIZE)
-static uint8_t thread_stack[IDLE_THREAD_STACK_SIZE];
-
-
-Idle::Idle()
+Idle::Idle():Thread("idle", entry, NULL, &Idle::thread_stack[0] \
+                    , sizeof(thread_stack), Scheduler::THREAD_PRIORITY_MAX - 1, 32)
 {
 
 }
@@ -78,13 +75,7 @@ void Idle::entry(void *parameter)
 void Idle::init(void)
 {
     /* initialize thread */
-    Thread *idle = new Thread("tidle",
-                   entry,
-                   NULL,
-                   &thread_stack[0],
-                   sizeof(thread_stack),
-                   Scheduler::THREAD_PRIORITY_MAX - 1,
-                   32);
+    Idle *idle = new Idle();
 
     /* startup */
     idle->startup();

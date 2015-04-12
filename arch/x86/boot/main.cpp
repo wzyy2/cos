@@ -17,6 +17,8 @@ static void clear_bss(void)
         *dst++ = 0;
 }
 
+void app_init();
+
 int main(){
     /* clear .bss */
     clear_bss();
@@ -29,7 +31,7 @@ int main(){
     system_heap_init((void *)&__bss_end, (void *)(1024UL*1024*32));
 
     /* init the c\c++ runtime environment */
-    runtime_boot_strap();
+    Runtime::boot_strap();
 
     /* init the console*/
     Console::Instance();
@@ -45,7 +47,7 @@ int main(){
     export_runtime_init();
 
     /* init application */
-    //rt_application_init();
+    app_init();
 
     /* init idle thread */
     Idle::init();
@@ -53,12 +55,25 @@ int main(){
     /* start scheduler */
     Scheduler::start();
 
-    while(1);
     /* never reach here */
 
     /* exit the c\c++ runtime environment */
-    runtime_exit();
+    Runtime::exit();
 
     return 0;
 }
+uint8_t thread_stack[512];
+void entry(void *p)
+{
+    while(1) {
+        printk("hello!\n");
+        Thread::sleep(1000);
+    }
+}
 
+void app_init()
+{
+    Thread *test = new Thread("test", entry, NULL, &thread_stack[0] \
+            , sizeof(thread_stack), Scheduler::THREAD_PRIORITY_MAX - 3, 30);
+    test->startup();
+}

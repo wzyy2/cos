@@ -3,11 +3,19 @@
 
 #include <cos/cosDef.h>
 
-extern bool runtime_down_flag;
 
+class Runtime
+{
+public:
+    /**< Flag show that if cpp runtime had been down. */
+    static bool down_flag;
 
-void runtime_boot_strap();
-void runtime_exit();
+    static void boot_strap();
+    static void exit();
 
+private:
+    Runtime();
+    ~Runtime();
+};
 
 #endif

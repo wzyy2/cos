@@ -90,16 +90,15 @@ Object *Object::find(const char *name, object_class_type type)
     /* which is invoke in interrupt status */
     COS_DEBUG_NOT_IN_INTERRUPT;
 
-    /* enter critical */
-    Scheduler::enter_critical();
-
-    if (object_container_[type].count(name) == 1)
+    if (object_container_[type].count(name) == 1) {
         return object_container_[type][name];
-
-    /* exit critical */
-    Scheduler::exit_critical();
+    }
 
     return NULL;
 }
 
 
+std::string Object::name()
+{
+    return name_;
+}

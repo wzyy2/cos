@@ -173,7 +173,7 @@ void *kmalloc(size_t size)
         size = MIN_SIZE_ALIGNED;
 
     /* take memory semaphore */
-    if(runtime_down_flag)
+    if(Runtime::down_flag)
         heap_sem.take(IPC::WAITING_FOREVER);
 
     for (ptr = (uint8_t *)lfree - heap_ptr;
@@ -247,7 +247,7 @@ void *kmalloc(size_t size)
                 COS_ASSERT(((lfree == heap_end) || (!lfree->used)));
             }
 
-            if(runtime_down_flag)
+            if(Runtime::down_flag)
                 heap_sem.release();
 
             COS_ASSERT((uint32_t)mem + SIZEOF_STRUCT_MEM + size <= (uint32_t)heap_end);
@@ -298,14 +298,14 @@ void *krealloc(void *rmem, size_t newsize)
     /* allocate a new memory block */
     if (rmem == NULL)
         return kmalloc(newsize);
-    if(runtime_down_flag)
+    if(Runtime::down_flag)
         heap_sem.take(IPC::WAITING_FOREVER);
 
     if ((uint8_t *)rmem < (uint8_t *)heap_ptr ||
             (uint8_t *)rmem >= (uint8_t *)heap_end)
     {
         /* illegal memory */
-        if(runtime_down_flag)
+        if(Runtime::down_flag)
             heap_sem.release();
 
         return rmem;
@@ -318,7 +318,7 @@ void *krealloc(void *rmem, size_t newsize)
     if (size == newsize)
     {
         /* the size is the same as */
-        if(runtime_down_flag)
+        if(Runtime::down_flag)
             heap_sem.release();
 
         return rmem;
@@ -343,12 +343,12 @@ void *krealloc(void *rmem, size_t newsize)
 
         plug_holes(mem2);
 
-        if(runtime_down_flag)
+        if(Runtime::down_flag)
             heap_sem.release();
 
         return rmem;
     }
-    if(runtime_down_flag)
+    if(Runtime::down_flag)
         heap_sem.release();
 
     /* expand memory */
@@ -425,7 +425,7 @@ void kfree(void *rmem)
                    (uint32_t)rmem,
                    (uint32_t)(mem->next - ((uint8_t *)mem - heap_ptr))));
 
-    if(runtime_down_flag)
+    if(Runtime::down_flag)
         heap_sem.take(IPC::WAITING_FOREVER);
 
     /* ... which has to be in a used state ... */
@@ -444,7 +444,7 @@ void kfree(void *rmem)
     /* finally, see if prev or next are free also */
     plug_holes(mem);
 
-    if(runtime_down_flag)
+    if(Runtime::down_flag)
         heap_sem.release();
 }
 

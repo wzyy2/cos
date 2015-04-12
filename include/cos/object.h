@@ -21,6 +21,7 @@ public:
 
     explicit Object(object_class_type type, const char *name);
     virtual  ~Object();
+    std::string name();
 
 protected:
     void detach();

@@ -3,15 +3,16 @@
 
 #include <cos/cos.h>
 
-/* Flag show that if cpp runtime had been down */
-bool runtime_down_flag = false;
 
-void * __dso_handle = 0; 
+void * __dso_handle = 0;
 
-/*
+
+bool Runtime::down_flag = false;
+
+/**
  *	This function will call the constructors
  */
-void runtime_boot_strap()
+void Runtime::boot_strap()
 {
     //Walk and call the constructors in the ctor_list
     
@@ -36,13 +37,13 @@ void runtime_boot_strap()
 
     libc_system_init("NULL");
 
-    runtime_down_flag = true;
+    Runtime::down_flag = true;
 }
 
 /*
  *  This function will call the deconstructors
  */
-void runtime_exit()
+void Runtime::exit()
 {
     //Walk and call the deconstructors in the dtor_list
     

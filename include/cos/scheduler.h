@@ -24,6 +24,8 @@ public:
 
     static Thread *get_current_thread();
 
+    static const uint8_t THREAD_PRIORITY_MAX = 255;
+
 private:
     Scheduler();
     ~Scheduler();
@@ -32,8 +34,6 @@ private:
     static uint8_t current_priority_;
 
     static int16_t lock_nest_;
-
-    static const uint8_t THREAD_PRIORITY_MAX = 255;
 
     static std::set<Thread *, Thread::Compare> thread_set_;  /**< the thread set */
     static std::list<Thread *> defunct_list_;  /**< the defunct thread list */
