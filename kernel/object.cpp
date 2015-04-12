@@ -1,8 +1,7 @@
 #include "cos/object.h"
 
 #include <cos/cos.h>
-#include <cos/cosHw.h>
-
+#include <cos/scheduler.h>
 
 std::map<std::string, Object *> Object::object_container_[Object_Class_Unknown];
 
@@ -63,14 +62,6 @@ void Object::detach()
     temp = arch_interrupt_disable();
 
     /* remove from object container */
-//    for (auto i = object_container_[type_].begin(); i != object_container_[type_].end(); i++)
-//    {
-//        if (i->second == this)
-//        {
-//            object_container_[type_].erase(i);
-//            break;
-//        }
-//    }
     object_container_[type_].erase(name_);
 
     /* unlock interrupt */
@@ -99,8 +90,14 @@ Object *Object::find(const char *name, object_class_type type)
     /* which is invoke in interrupt status */
     COS_DEBUG_NOT_IN_INTERRUPT;
 
+    /* enter critical */
+    Scheduler::enter_critical();
+
     if (object_container_[type].count(name) == 1)
         return object_container_[type][name];
+
+    /* exit critical */
+    Scheduler::exit_critical();
 
     return NULL;
 }

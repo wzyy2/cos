@@ -5,6 +5,8 @@ from building import *
 cwd  = GetCurrentDir()
 
 src = Glob('*.c') + Glob('*.cpp') + Glob('*.S')
+src += Glob('ipc/*.c') + Glob('ipc/*.cpp') + Glob('ipc/*.S')
+
 
 CPPPATH = [cwd, COS_ROOT + '/include']
 group = DefineGroup('Kernel', src, depend = [''], CPPPATH = CPPPATH)

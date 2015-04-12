@@ -9,6 +9,10 @@
 extern "C" {
 #endif
 
+#define  MS_TICK  (1000UL / CONFIG_TICK_PER_SECOND);
+#define  US_TICK  (1000000UL / CONFIG_TICK_PER_SECOND);
+#define  NS_TICK  (1000000000UL / CONFIG_TICK_PER_SECOND);
+
 /*
  * clock & timer interface
  */

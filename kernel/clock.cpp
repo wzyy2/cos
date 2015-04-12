@@ -1,6 +1,5 @@
 #include <cos/clock.h>
 #include <cos/cos.h>
-#include <cos/cosHw.h>
 
 /**
  * @addtogroup Clock
@@ -40,23 +39,23 @@ void tick_set(tick_t tick)
  */
 void tick_increase(void)
 {
-//    struct rt_thread *thread;
+    Thread *thread;
 
     /* increase the global tick */
-    ++ global_tick;
+    ++global_tick;
 
     /* check time slice */
-//    thread = rt_thread_self();
+    thread = Scheduler::get_current_thread();
 
-//    -- thread->remaining_tick;
-//    if (thread->remaining_tick == 0)
-//    {
-//        /* change to initialized tick */
-//        thread->remaining_tick = thread->init_tick;
+    --thread->remaining_tick_;
+    if (thread->remaining_tick_ == 0)
+    {
+        /* change to initialized tick */
+        thread->remaining_tick_ = thread->init_tick_;
 
-//        /* yield */
-//        rt_thread_yield();
-//    }
+        /* yield */
+        Thread::yield();
+    }
 
     /* check timer */
     Timer::check();

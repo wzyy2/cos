@@ -47,7 +47,9 @@ HDINTERRUPTFNC(irq15, 15)
 .globl interrupt_enter
 .globl interrupt_leave
 .globl isr_table
-
+.globl thread_switch_interrupt_flag
+.globl interrupt_from_thread
+.globl interrupt_to_thread
 
 _hdinterrupts:
 	push %ds
@@ -73,12 +75,38 @@ _hdinterrupts:
 
 	call interrupt_leave
 
-	popl %esp
-	popal
-	pop %es
-	pop %ds
-	add $4,%esp
-	iret
+        /* if thread_switch_interrupt_flag set, jump to _interrupt_thread_switch and don't return */
+        movl $thread_switch_interrupt_flag, %eax
+        movl (%eax), %ebx
+        cmp $0x1, %ebx
+        jz _interrupt_thread_switch
+
+        popl %esp
+        popal
+        pop %es
+        pop %ds
+        add $4,%esp
+        iret
+
+_interrupt_thread_switch:
+        popl %esp
+
+        movl $0x0, %ebx
+        movl %ebx, (%eax)
+
+        movl $interrupt_from_thread, %eax
+        movl (%eax), %ebx
+        movl %esp, (%ebx)
+
+        movl $interrupt_to_thread, %ecx
+        movl (%ecx), %edx
+        movl (%edx), %esp
+
+        popal
+        pop %es
+        pop %ds
+        add $4,%esp
+        iret
 
 
 

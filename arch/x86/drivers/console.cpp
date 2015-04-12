@@ -2,7 +2,6 @@
 
 #include <arch/arch.h>
 #include <cos/cos.h>
-#include <cos/cosHw.h>
 #include <string.h>
 
 
@@ -90,6 +89,7 @@ Console *Console::Instance()
             arch_interrupt_install(INTKEYBOARD, (isr_handler_t) Console::isr, NULL);
             arch_interrupt_umask(INTKEYBOARD);
         }else{
+            printk("ERROR : Fail to create console!\n");
             delete self;
             self = NULL;
         }
@@ -116,8 +116,6 @@ Console::Console():Device(Device::Device_Class_Char,
     memset(togglecode, CAPSLOCK, 58);
     memset(togglecode + 58, NUMLOCK, 69);
     memset(togglecode + 58 + 69, SCROLLOCK, 70);
-
-
 }
 
 Console::~Console()

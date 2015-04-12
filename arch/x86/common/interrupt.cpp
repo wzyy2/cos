@@ -1,8 +1,10 @@
 #include <cos/cos.h>
-#include <cos/cosHw.h>
 #include <arch/arch.h>
 
 extern uint32_t interrupt_nest;
+uint32_t interrupt_from_thread = 0, interrupt_to_thread = 0;
+uint32_t thread_switch_interrupt_flag = 0;
+
 
 /* exception and interrupt handler table */
 isr_handler_t isr_table[MAX_HANDLERS];

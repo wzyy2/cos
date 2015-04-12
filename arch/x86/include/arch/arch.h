@@ -5,6 +5,7 @@
 #include <arch/grub.h>
 #include <arch/systick.h>
 #include <arch/interrupt.h>
+#include <arch/context.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -111,6 +112,9 @@ extern "C" {
 #define THRE                0x20    /* Transmitter Holding Register Empty */
 #define TEMT                0x40    /* Transmitter Empty */
 #define ERFIFO              0x80    /* Error receive Fifo */
+
+uint8_t *arch_stack_init(void *tentry, void *parameter,
+    uint8_t *stack_addr, void *texit);
 
 #ifdef __cplusplus
 }

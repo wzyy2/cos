@@ -1,8 +1,9 @@
 #include "cos/sysheap.h"
 
 #include <cos/cos.h>
-#include <cos/cosHw.h>
 #include <cos/semaphore.h>
+
+static size_t used_mem, max_mem;
 
 /* will only be created when runtime_bootstrap have been called */
 Semaphore heap_sem("heap", 1, IPC::FLAG_FIFO);
@@ -45,8 +46,8 @@ static void plug_holes(struct heap_mem *mem)
     /* plug hole forward */
     nmem = (struct heap_mem *)&heap_ptr[mem->next];
     if (mem != nmem &&
-        nmem->used == 0 &&
-        (uint8_t *)nmem != (uint8_t *)heap_end)
+            nmem->used == 0 &&
+            (uint8_t *)nmem != (uint8_t *)heap_end)
     {
         /* if mem->next is unused and not end of heap_ptr,
          * combine mem and mem->next
@@ -91,7 +92,7 @@ void system_heap_init(void *begin_addr, void *end_addr)
 
     /* alignment addr */
     if ((end_align > (2 * SIZEOF_STRUCT_MEM)) &&
-        ((end_align - 2 * SIZEOF_STRUCT_MEM) >= begin_align))
+            ((end_align - 2 * SIZEOF_STRUCT_MEM) >= begin_align))
     {
         /* calculate the aligned memory size */
         mem_size_aligned = end_align - begin_align - 2 * SIZEOF_STRUCT_MEM;
@@ -99,7 +100,7 @@ void system_heap_init(void *begin_addr, void *end_addr)
     else
     {
         printk("mem init, error begin address 0x%x, and end address 0x%x\n",
-                   (uint32_t)begin_addr, (uint32_t)end_addr);
+               (uint32_t)begin_addr, (uint32_t)end_addr);
 
         return;
     }
@@ -108,7 +109,7 @@ void system_heap_init(void *begin_addr, void *end_addr)
     heap_ptr = (uint8_t *)begin_align;
 
     COS_DEBUG_LOG(COS_DEBUG_MEM, ("mem init, heap begin address 0x%x, size %d\n",
-                                (uint32_t)heap_ptr, mem_size_aligned));
+                                  (uint32_t)heap_ptr, mem_size_aligned));
 
     /* initialize the start of the heap */
     mem        = (struct heap_mem *)heap_ptr;
@@ -153,7 +154,7 @@ void *kmalloc(size_t size)
 
     if (size != WIDTH_ALIGN(size, CONFIG_ALIGN_SIZE))
         COS_DEBUG_LOG(COS_DEBUG_MEM, ("malloc size %d, but align to %d\n",
-                                    size, WIDTH_ALIGN(size, CONFIG_ALIGN_SIZE)));
+                                      size, WIDTH_ALIGN(size, CONFIG_ALIGN_SIZE)));
     else
         COS_DEBUG_LOG(COS_DEBUG_MEM, ("malloc size %d\n", size));
 
@@ -187,7 +188,7 @@ void *kmalloc(size_t size)
              * mem->next - (ptr + SIZEOF_STRUCT_MEM) gives us the 'user data size' of mem */
 
             if (mem->next - (ptr + SIZEOF_STRUCT_MEM) >=
-                (size + SIZEOF_STRUCT_MEM + MIN_SIZE_ALIGNED))
+                    (size + SIZEOF_STRUCT_MEM + MIN_SIZE_ALIGNED))
             {
                 /* (in addition to the above, we test if another struct heap_mem (SIZEOF_STRUCT_MEM) containing
                  * at least MIN_SIZE_ALIGNED of data also fits in the 'user data space' of 'mem')
@@ -216,6 +217,9 @@ void *kmalloc(size_t size)
                     ((struct heap_mem *)&heap_ptr[mem2->next])->prev = ptr2;
                 }
 
+                used_mem += (size + SIZEOF_STRUCT_MEM);
+                if (max_mem < used_mem)
+                    max_mem = used_mem;
             }
             else
             {
@@ -227,7 +231,9 @@ void *kmalloc(size_t size)
                  * will always be used at this point!
                  */
                 mem->used = 1;
-
+                used_mem += mem->next - ((uint8_t*)mem - heap_ptr);
+                if (max_mem < used_mem)
+                    max_mem = used_mem;
             }
             /* set memory block magic */
             mem->magic = HEAP_MAGIC;
@@ -249,9 +255,9 @@ void *kmalloc(size_t size)
             COS_ASSERT((((uint32_t)mem) & (CONFIG_ALIGN_SIZE-1)) == 0);
 
             COS_DEBUG_LOG(COS_DEBUG_MEM,
-                         ("allocate memory at 0x%x, size: %d\n",
-                          (uint32_t)((uint8_t *)mem + SIZEOF_STRUCT_MEM),
-                          (uint32_t)(mem->next - ((uint8_t *)mem - heap_ptr))));
+                          ("allocate memory at 0x%x, size: %d\n",
+                           (uint32_t)((uint8_t *)mem + SIZEOF_STRUCT_MEM),
+                           (uint32_t)(mem->next - ((uint8_t *)mem - heap_ptr))));
 
 
             /* return the memory data except mem struct */
@@ -296,7 +302,7 @@ void *krealloc(void *rmem, size_t newsize)
         heap_sem.take(IPC::WAITING_FOREVER);
 
     if ((uint8_t *)rmem < (uint8_t *)heap_ptr ||
-        (uint8_t *)rmem >= (uint8_t *)heap_end)
+            (uint8_t *)rmem >= (uint8_t *)heap_end)
     {
         /* illegal memory */
         if(runtime_down_flag)
@@ -321,6 +327,7 @@ void *krealloc(void *rmem, size_t newsize)
     if (newsize + SIZEOF_STRUCT_MEM + MIN_SIZE < size)
     {
         /* split memory block */
+        used_mem -= (size - newsize);
 
         ptr2 = ptr + SIZEOF_STRUCT_MEM + newsize;
         mem2 = (struct heap_mem *)&heap_ptr[ptr2];
@@ -399,11 +406,11 @@ void kfree(void *rmem)
         return;
     COS_ASSERT((((uint32_t)rmem) & (CONFIG_ALIGN_SIZE-1)) == 0);
     COS_ASSERT((uint8_t *)rmem >= (uint8_t *)heap_ptr &&
-              (uint8_t *)rmem < (uint8_t *)heap_end);
+               (uint8_t *)rmem < (uint8_t *)heap_end);
 
 
     if ((uint8_t *)rmem < (uint8_t *)heap_ptr ||
-        (uint8_t *)rmem >= (uint8_t *)heap_end)
+            (uint8_t *)rmem >= (uint8_t *)heap_end)
     {
         COS_DEBUG_LOG(COS_DEBUG_MEM, ("illegal memory\n"));
 
@@ -414,9 +421,9 @@ void kfree(void *rmem)
     mem = (struct heap_mem *)((uint8_t *)rmem - SIZEOF_STRUCT_MEM);
 
     COS_DEBUG_LOG(COS_DEBUG_MEM,
-                 ("release memory 0x%x, size: %d\n",
-                  (uint32_t)rmem,
-                  (uint32_t)(mem->next - ((uint8_t *)mem - heap_ptr))));
+                  ("release memory 0x%x, size: %d\n",
+                   (uint32_t)rmem,
+                   (uint32_t)(mem->next - ((uint8_t *)mem - heap_ptr))));
 
     if(runtime_down_flag)
         heap_sem.take(IPC::WAITING_FOREVER);
@@ -433,7 +440,7 @@ void kfree(void *rmem)
         /* the newly freed struct is now the lowest */
         lfree = mem;
     }
-
+    used_mem -= (mem->next - ((uint8_t*)mem - heap_ptr));
     /* finally, see if prev or next are free also */
     plug_holes(mem);
 
@@ -442,3 +449,20 @@ void kfree(void *rmem)
 }
 
 
+void memory_info(uint32_t *total,uint32_t *used,
+                 uint32_t *max_used)
+{
+    if (total != NULL)
+        *total = mem_size_aligned;
+    if (used  != NULL)
+        *used = used_mem;
+    if (max_used != NULL)
+        *max_used = max_mem;
+}
+
+void list_mem(void)
+{
+    printk("total memory: %d\n", mem_size_aligned);
+    printk("used memory : %d\n", used_mem);
+    printk("maximum allocated memory: %d\n", max_mem);
+}

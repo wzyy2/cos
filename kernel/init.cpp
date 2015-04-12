@@ -1,7 +1,6 @@
 #include "cos/init.h"
 
 #include <cos/cos.h>
-#include <cos/cosHw.h>
 
 extern init_fn_t __cos_init_start;
 extern init_fn_t __cos_init_end;

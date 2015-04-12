@@ -5,6 +5,7 @@
 #include <cos/cosConf.h>
 #include <cos/cosDef.h>
 
+#include <arch/arch.h>
 
 #include <cos/irq.h>
 #include <cos/sysheap.h>
@@ -15,9 +16,11 @@
 
 #ifdef __cplusplus
 #include <cos/runtime.h>
-
+#include <cos/thread.h>
 #include <cos/device.h>
 #include <cos/timer.h>
+#include <cos/scheduler.h>
+#include <cos/idle.h>
 
 #endif
 

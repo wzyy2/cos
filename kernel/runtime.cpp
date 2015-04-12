@@ -2,7 +2,6 @@
 #include "libc.h"
 
 #include <cos/cos.h>
-#include <cos/cosHw.h>
 
 /* Flag show that if cpp runtime had been down */
 bool runtime_down_flag = false;

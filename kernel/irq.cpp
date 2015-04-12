@@ -1,7 +1,7 @@
 #include "cos/irq.h"
 
 #include <cos/cos.h>
-#include <cos/cosHw.h>
+
 
 volatile uint8_t interrupt_nest;
 

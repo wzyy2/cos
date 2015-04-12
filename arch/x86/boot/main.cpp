@@ -1,5 +1,4 @@
 #include <cos/cos.h>
-#include <cos/cosHw.h>
 #include <arch/arch.h>
 
 #include "console.h"
@@ -17,18 +16,6 @@ static void clear_bss(void)
     while (dst < __bss_end)
         *dst++ = 0;
 }
-
-const char sasasa[100] = {
-    1,2,3,4,5,6,1,2,3,
-};
-
-void test1(void *){
-    printk("test1!!!!!\n");
-}
-void test2(void *){
-    printk("test2!!!!!\n");
-}
-
 
 int main(){
     /* clear .bss */
@@ -57,12 +44,20 @@ int main(){
     /* export function runtime Initialization*/
     export_runtime_init();
 
+    /* init application */
+    //rt_application_init();
+
+    /* init idle thread */
+    Idle::init();
+
+    /* start scheduler */
+    Scheduler::start();
 
     while(1);
+    /* never reach here */
 
     /* exit the c\c++ runtime environment */
     runtime_exit();
-
 
     return 0;
 }

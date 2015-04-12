@@ -1,7 +1,6 @@
 #include "cos/kservice.h"
 
 #include <cos/cos.h>
-#include <cos/cosHw.h>
 
 #include <stdio.h>
 
@@ -34,21 +33,27 @@ void show_version(void)
  */
 err_t get_errno(void)
 {
-    // rt_thread_t tid;
+    Thread *thread;
     err_t ret;
 
     if (interrupt_get_nest() != 0)
     {
         /* it's in interrupt context */
         ret = _errno;
+        _errno = ERR_OK;
+        return ret;
     }
-    ret = _errno;
-    // tid = rt_thread_self();
-    // if (tid == RT_NULL)
+    thread = Scheduler::get_current_thread();
 
-    _errno = ERR_OK;
-    return ret;
-    // return tid->error;
+    if (thread == NULL){
+        ret = _errno;
+        _errno = ERR_OK;
+        return ret;
+    } else {
+        ret = thread->error_;
+        thread->error_ = ERR_OK;
+        return ret;
+    }
 }
 
 /*
@@ -58,7 +63,7 @@ err_t get_errno(void)
  */
 void set_errno(err_t error)
 {
-    // rt_thread_t tid;
+    Thread *thread;
 
     if (interrupt_get_nest() != 0)
     {
@@ -68,15 +73,15 @@ void set_errno(err_t error)
         return;
     }
 
-    // tid = rt_thread_self();
-    // if (tid == RT_NULL)
-    // {
+     thread = Scheduler::get_current_thread();
+     if (thread == NULL)
+     {
         _errno = error;
 
-    //     return;
-    // }
+         return;
+     }
 
-    // tid->error = error;
+     thread->error_ = error;
 }
 
 /**
@@ -88,6 +93,10 @@ int *cos_errno(void)
 {
     if (interrupt_get_nest() != 0)
         return (int *)&_errno;
+
+    Thread *thread = Scheduler::get_current_thread();
+    if (thread != NULL)
+        return (int *)&(thread->error_);
 
     return (int *)&_errno;
 }

@@ -20,7 +20,7 @@ extern "C" {
 
 /* cos version information */
 #define C_VERSION                      0L              /**< major version number */
-#define C_SUBVERSION                   0L              /**< minor version number */
+#define C_SUBVERSION                   1L              /**< minor version number */
 #define C_REVISION                     1L              /**< revise version number */
 
 /* cos version */

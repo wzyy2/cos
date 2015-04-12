@@ -1,6 +1,6 @@
 #include "cos/semaphore.h"
 #include <cos/cos.h>
-#include <cos/cosHw.h>
+
 
 /**
  * This function will initialize a semaphore and put it under control of

@@ -15,6 +15,7 @@ public:
         Object_Class_Mutex, /**< The object is a mutex. */
         Object_Class_Timer,  /**< The object is a timer. */
         Object_Class_Device,    /**< The object is a device */
+        Object_Class_Thread,    /**< The object is a thread */
         Object_Class_Unknown,   /**< The object is unknown. */
     };
 

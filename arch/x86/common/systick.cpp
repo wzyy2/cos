@@ -2,7 +2,6 @@
 #include <arch/arch.h>
 
 #include <cos/cos.h>
-#include <cos/cosHw.h>
 
 
 extern "C" void timer_handler(int vector)

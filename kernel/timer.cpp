@@ -1,7 +1,6 @@
 #include "cos/timer.h"
 
 #include <cos/cos.h>
-#include <cos/cosHw.h>
 
 /**
  * @addtogroup Clock
@@ -171,7 +170,7 @@ err_t Timer::control(uint8_t cmd, void *arg)
 
 
 /**
- * This function will check timer list, if a timeout event happens, the
+ * This function will check timer set, if a timeout event happens, the
  * corresponding timeout function will be invoked.
  *
  * @note this function shall be invoked in operating system timer interrupt.
@@ -184,6 +183,9 @@ void Timer::check(void)
     COS_DEBUG_LOG(COS_DEBUG_TIMER, ("timer check enter\n"));
 
     current_tick = tick_get();
+
+    /* enter critical */
+    Scheduler::enter_critical();
 
     /* disable interrupt */
     level = arch_interrupt_disable();
@@ -198,7 +200,7 @@ void Timer::check(void)
          */
         if ((current_tick - t->timeout_tick_) < TICK_MAX/2)
         {
-            /* remove timer from timer list firstly */
+            /* remove timer from timer set firstly */
             timer_set_.erase(t);
 
             /* call timeout function */
@@ -225,6 +227,9 @@ void Timer::check(void)
         else
             break;
     }
+
+    /* unlock scheduler */
+    Scheduler::exit_critical();
 
     /* enable interrupt */
     arch_interrupt_enable(level);

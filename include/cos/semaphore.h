@@ -21,6 +21,7 @@ public:
     err_t control(uint8_t cmd, void *arg);
 
 
+
 private:
 
     /**< value of semaphore. */
@@ -28,6 +29,6 @@ private:
 
 };
 
-/*@}*/
+
 
 #endif // SEMAPHORE_H

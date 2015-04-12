@@ -6,12 +6,6 @@
 
 
 /**
- * @addtogroup Clock
- */
-
-/*@{*/
-
-/**
  * Class of timer
  */
 class Timer : public Object
@@ -61,9 +55,9 @@ private:
         }
     };
 
-    static std::set<Timer *, Compare> timer_set_;
+    static std::set<Timer *, Compare> timer_set_;  /**< timeout set */
 };
 
-/*@}*/
+
 
 #endif // TIMER_H
