@@ -47,15 +47,17 @@ private:
     tick_t        init_tick_;                         /**< timer timeout tick */
     tick_t        timeout_tick_;                      /**< timeout tick */
 
-    struct Compare{
-        bool operator () (const Timer *p1, const Timer *p2) const
-        {
-            //small to big
-            return p1->timeout_tick_ < p2->timeout_tick_;
-        }
-    };
+//    struct Compare{
+//        bool operator () (const Timer *p1, const Timer *p2) const
+//        {
+//            //small to big
+//            return p1->timeout_tick_ < p2->timeout_tick_;
+//        }
+//    };
 
-    static std::set<Timer *, Compare> timer_set_;  /**< timeout set */
+    coslib::RBTree<Timer>::RBTreeNode * node_;
+
+    static coslib::RBTree<Timer> timer_tree_;  /**< timeout tree */
 };
 
 

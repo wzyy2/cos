@@ -157,8 +157,6 @@ size_t Device::read(off_t    pos,
                          void   *buffer,
                          size_t   size)
 {
-    COS_ASSERT(dev != NULL);
-
     if (ref_count_ == 0)
     {
         set_errno(-ERR_ERROR);
@@ -184,8 +182,6 @@ size_t Device::write(off_t    pos,
                           const void *buffer,
                           size_t   size)
 {
-    COS_ASSERT(dev != NULL);
-
     if (ref_count_ == 0)
     {
         set_errno(-ERR_ERROR);
@@ -206,8 +202,6 @@ size_t Device::write(off_t    pos,
  */
 err_t Device::control(uint8_t cmd, void *arg)
 {
-    COS_ASSERT(dev != NULL);
-
     /* call device write interface */
     return driver_control(cmd, arg);
 }
@@ -224,8 +218,6 @@ err_t Device::control(uint8_t cmd, void *arg)
 err_t
 Device::set_rx_indicate(err_t (*rx_ind)(Device *dev, size_t size))
 {
-    COS_ASSERT(dev != NULL);
-
     rx_indicate_ = rx_ind;
 
     return ERR_OK;
@@ -243,8 +235,6 @@ Device::set_rx_indicate(err_t (*rx_ind)(Device *dev, size_t size))
 err_t
 Device::set_tx_complete(err_t (*tx_done)(Device *dev, void *buffer))
 {
-    COS_ASSERT(dev != NULL);
-
     tx_complete_ = tx_done;
 
     return ERR_OK;

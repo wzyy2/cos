@@ -78,7 +78,7 @@
 {                                                                             \
     base_t level;                                                          \
     level = arch_interrupt_disable();                                        \
-    if (arch_interrupt_get_nest() != 0)                                         \
+    if (interrupt_get_nest() != 0)                                         \
 {                                                                         \
     printk("Function[%s] shall not used in ISR\n", __FUNCTION__);     \
     COS_ASSERT(0)                                                          \
@@ -87,6 +87,21 @@
     }                                                                             \
     while (0)
 
+#define COS_DEBUG_IN_THREAD_CONTEXT                                            \
+    do                                                                            \
+{                                                                             \
+    base_t level;                                                          \
+    level = arch_interrupt_disable();                                        \
+    if (Scheduler::get_current_thread() == NULL)                                          \
+{                                                                         \
+    printk("Function[%s] shall not be used before scheduler start\n", \
+    __FUNCTION__);                                             \
+    COS_ASSERT(0)                                                          \
+    }                                                                         \
+    COS_DEBUG_NOT_IN_INTERRUPT;                                                \
+    arch_interrupt_enable(level);                                            \
+    }\
+    while (0)
 
 #else /* COS_DEBUG */
 

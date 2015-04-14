@@ -58,8 +58,8 @@ err_t Semaphore::take(int32_t time)
     temp = arch_interrupt_disable();
 
     COS_DEBUG_LOG(COS_DEBUG_IPC, ("thread %s take sem:%s, which value is: %d\n",
-                                rt_thread_self()->name,
-                                name_,
+                                Scheduler::get_current_thread()->name().c_str(),
+                                name_.c_str(),
                                 value_));
 
     if (value_ > 0)
@@ -86,13 +86,13 @@ err_t Semaphore::take(int32_t time)
 
             /* semaphore is unavailable, push to suspend list */
             /* get current thread */
-            //thread = rt_thread_self();
+            Thread *thread = Scheduler::get_current_thread();
 
             /* reset thread error number */
-            //thread->error = ERR_OK;
+            set_errno(ERR_OK);
 
             COS_DEBUG_LOG(COS_DEBUG_IPC, ("sem take: suspend thread - %s\n",
-                                        thread->name));
+                                        thread->name().c_str()));
 
             /* suspend thread */
 //            rt_ipc_list_suspend(&(sem->parent.suspend_thread),
@@ -103,7 +103,7 @@ err_t Semaphore::take(int32_t time)
             if (time > 0)
             {
                 COS_DEBUG_LOG(COS_DEBUG_IPC, ("set thread:%s to timer list\n",
-                                            thread->name));
+                                            thread->name().c_str()));
 
                 /* reset the timeout of thread timer and start it */
 //                rt_timer_control(&(thread->thread_timer),
@@ -155,8 +155,8 @@ err_t Semaphore::release()
     temp = arch_interrupt_disable();
 
     COS_DEBUG_LOG(COS_DEBUG_IPC, ("thread %s releases sem:%s, which value is: %d\n",
-                                rt_thread_self()->name,
-                                name_,
+                                Scheduler::get_current_thread()->name().c_str(),
+                                name_.c_str(),
                                 value_));
 
 //    if (!rt_list_isempty(&sem->parent.suspend_thread))

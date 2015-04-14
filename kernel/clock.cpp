@@ -46,19 +46,21 @@ void tick_increase(void)
 
     /* check time slice */
     thread = Scheduler::get_current_thread();
+    if(thread != NULL) {
+        --thread->remaining_tick_;
+        if (thread->remaining_tick_ == 0)
+        {
+            /* change to initialized tick */
+            thread->remaining_tick_ = thread->init_tick_;
 
-    --thread->remaining_tick_;
-    if (thread->remaining_tick_ == 0)
-    {
-        /* change to initialized tick */
-        thread->remaining_tick_ = thread->init_tick_;
-
-        /* yield */
-        Thread::yield();
+            /* yield */
+            Thread::yield();
+        }
     }
 
     /* check timer */
     Timer::check();
+
 }
 
 /**

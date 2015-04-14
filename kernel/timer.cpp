@@ -8,7 +8,7 @@
 
 /*@{*/
 
-std::set<Timer *, Timer::Compare> Timer::timer_set_;
+coslib::RBTree<Timer> Timer::timer_tree_;
 
 /**
  * This function will initialize a timer, normally this function is used to
@@ -37,12 +37,15 @@ Timer::Timer(const char *name,
 
     timeout_tick_ = 0;
     init_tick_    = time;
+    node_ = new coslib::RBTree<Timer>::RBTreeNode (timeout_tick_, this, NULL);
 
 }
 
 Timer::~Timer()
 {
     detach();
+
+    delete node_;
 }
 
 /**
@@ -58,7 +61,7 @@ err_t Timer::detach()
     level = arch_interrupt_disable();
 
     /* remove from set */
-    timer_set_.erase(this);
+    timer_tree_.remove(node_);
 
     /* enable interrupt */
     arch_interrupt_enable(level);
@@ -81,7 +84,7 @@ err_t Timer::start()
     /* stop timer firstly */
     level = arch_interrupt_disable();
     /* remove timer from set */
-    timer_set_.erase(this);
+    timer_tree_.remove(node_);
     /* change status of timer */
     flag_ &= ~Timer::FLAG_ACTIVATED;
     arch_interrupt_enable(level);
@@ -98,7 +101,8 @@ err_t Timer::start()
 
     flag_ |= Timer::FLAG_ACTIVATED;
 
-    timer_set_.insert(this);
+    node_->key = timeout_tick_;
+    timer_tree_.insert(node_);
 
     /* enable interrupt */
     arch_interrupt_enable(level);
@@ -116,15 +120,13 @@ err_t Timer::stop()
 {
     register base_t level;
 
-    /* timer check */
-    COS_ASSERT(timer != NULL);
     if (!(flag_ & Timer::FLAG_ACTIVATED))
         return -ERR_ERROR;
 
     /* disable interrupt */
     level = arch_interrupt_disable();
 
-    timer_set_.erase(this);
+    timer_tree_.remove(node_);
 
     /* enable interrupt */
     arch_interrupt_enable(level);
@@ -185,14 +187,14 @@ void Timer::check(void)
     current_tick = tick_get();
 
     /* enter critical */
-    Scheduler::enter_critical();
+    //    Scheduler::enter_critical();
 
     /* disable interrupt */
     level = arch_interrupt_disable();
 
-    while (!timer_set_.empty())
+    while (!timer_tree_.empty())
     {
-        Timer *t =  *(timer_set_.begin());
+        Timer *t =  timer_tree_.min();
 
         /*
          * It supposes that the new tick shall less than the half duration of
@@ -201,7 +203,8 @@ void Timer::check(void)
         if ((current_tick - t->timeout_tick_) < TICK_MAX/2)
         {
             /* remove timer from timer set firstly */
-            timer_set_.erase(t);
+            timer_tree_.remove(t->node_);
+
 
             /* call timeout function */
             t->timeout_func_(t->parameter_);
@@ -228,8 +231,8 @@ void Timer::check(void)
             break;
     }
 
-    /* unlock scheduler */
-    Scheduler::exit_critical();
+    //    /* unlock scheduler */
+    //    Scheduler::exit_critical();
 
     /* enable interrupt */
     arch_interrupt_enable(level);

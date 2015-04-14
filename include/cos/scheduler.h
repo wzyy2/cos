@@ -9,6 +9,7 @@ class Scheduler
 {
 public:
     friend class Idle;
+    friend class Thread;
 
     static void init();
     static void process();
@@ -35,7 +36,10 @@ private:
 
     static int16_t lock_nest_;
 
-    static std::set<Thread *, Thread::Compare> thread_set_;  /**< the thread set */
+
+    static coslib::RBTree<Thread> thread_tree_;  /**< the thread tree */
+
+
     static std::list<Thread *> defunct_list_;  /**< the defunct thread list */
 
 };

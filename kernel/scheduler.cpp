@@ -6,7 +6,7 @@
 int16_t Scheduler::lock_nest_ = 0;
 Thread *Scheduler::current_thread_ = NULL;
 uint8_t Scheduler::current_priority_ = THREAD_PRIORITY_MAX - 1;
-std::set<Thread *, Thread::Compare> Scheduler::thread_set_;
+coslib::RBTree<Thread> Scheduler::thread_tree_;
 std::list<Thread *> Scheduler::defunct_list_;
 
 
@@ -20,7 +20,7 @@ void Scheduler::start()
     register Thread *to_thread;
 
     /* get switch to thread */
-    to_thread = *(thread_set_.begin());
+    to_thread = thread_tree_.min();
 
     current_thread_ = to_thread;
 
@@ -47,7 +47,7 @@ void Scheduler::process()
     if (lock_nest_ == 0)
     {
         /* get switch to thread */
-        to_thread = *(thread_set_.begin());
+        to_thread = thread_tree_.min();
 
         /* if the destination thread is not the same as current thread */
         if (to_thread != current_thread_)
@@ -61,14 +61,15 @@ void Scheduler::process()
                          ("[%d]switch to priority#%d "
                           "thread:%s(sp:0x%p), "
                           "from thread:%s(sp: 0x%p)\n",
-                          interrupt_get_nest(), highest_ready_priority,
-                          to_thread->name.c_str(), to_thread->sp_,
-                          from_thread->name.c_str(), from_thread->sp_));
+                          interrupt_get_nest(), to_thread->current_priority_,
+                          to_thread->name().c_str(), to_thread->sp_,
+                          from_thread->name().c_str(), from_thread->sp_));
 
             if (interrupt_get_nest() == 0)
             {
-                arch_context_switch((uint32_t)&from_thread->sp_,
-                                     (uint32_t)&to_thread->sp_);
+                arch_context_switch((unsigned long)&from_thread->sp_,
+                                     (unsigned long)&to_thread->sp_);
+
             }
             else
             {
@@ -103,7 +104,7 @@ void Scheduler::insert_thread(Thread *thread)
     thread->stat_ = Thread::THREAD_READY;
 
     /* insert thread to ready set */
-    thread_set_.insert(thread);
+    thread_tree_.insert(thread->node_);
 
     /* set priority mask */
     COS_DEBUG_LOG(COS_DEBUG_SCHEDULER, ("insert thread[%s], the priority: %d\n",
@@ -132,12 +133,12 @@ void Scheduler::remove_thread(Thread *thread)
     /* disable interrupt */
     temp = arch_interrupt_disable();
 
-    COS_DEBUG_LOG(RT_DEBUG_SCHEDULER, ("remove thread[%s], the priority: %d\n",
+    COS_DEBUG_LOG(COS_DEBUG_SCHEDULER, ("remove thread[%s], the priority: %d\n",
                                       thread->name_.c_str(),
                                       thread->current_priority_));
 
     /* remove thread from ready list */
-    thread_set_.erase(thread);
+    thread_tree_.remove(thread->node_);
 
     /* enable interrupt */
     arch_interrupt_enable(temp);

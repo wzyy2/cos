@@ -73,7 +73,7 @@ _traps:
 	pushl %eax			/*push trapno*/
         call arch_trap_irq
 	addl $4,%esp
-	call interrupt_leave
+        call interrupt_leave
 	popl %esp
 	popal
 	pop %es

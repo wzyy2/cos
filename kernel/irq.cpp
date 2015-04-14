@@ -35,8 +35,8 @@ void interrupt_leave(void)
 {
     base_t level;
 
-    COS_DEBUG_LOG(RT_DEBUG_IRQ, ("irq leave, irq nest:%d\n",
-                                cos_interrupt_nest));
+    COS_DEBUG_LOG(COS_DEBUG_IRQ, ("irq leave, irq nest:%d\n",
+                                interrupt_nest));
 
     level = arch_interrupt_disable();
     interrupt_nest --;

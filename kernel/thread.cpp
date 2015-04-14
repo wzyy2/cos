@@ -56,6 +56,8 @@ Thread::Thread(const char       *name,
 
     /* init thread timer */
     thread_timer_ = new Timer(name, Thread::timeout, this, 0, Timer::FLAG_ONE_SHOT);
+
+    node_ = new coslib::RBTree<Thread>::RBTreeNode (current_priority_, this, NULL);
 }
 
 Thread::~Thread()
@@ -103,7 +105,7 @@ err_t Thread::startup()
     /* calculate priority attribute */
 
     COS_DEBUG_LOG(COS_DEBUG_THREAD, ("startup a thread:%s with priority:%d\n",
-                                     name_, init_priority_));
+                                     name_.c_str(), init_priority_));
     /* change thread stat */
     stat_ = THREAD_SUSPEND;
     /* then resume it */
@@ -162,6 +164,8 @@ err_t Thread::detach(bool delete_later)
  * is still in READY state.
  *
  * @return ERR_OK
+ *
+ * @note This function  will be called in interrupt status.
  */
 err_t Thread::yield(void)
 {
@@ -179,7 +183,6 @@ err_t Thread::yield(void)
     {
         /* remove thread from thread set */
         Scheduler::remove_thread(thread);
-
         /* put thread to end of ready queue */
         Scheduler::insert_thread(thread);
 
@@ -314,7 +317,7 @@ err_t Thread::suspend()
 {
     register base_t temp;
 
-    COS_DEBUG_LOG(COS_DEBUG_THREAD, ("thread suspend:  %s\n", name_));
+    COS_DEBUG_LOG(COS_DEBUG_THREAD, ("thread suspend:  %s\n", name_.c_str()));
 
     if (stat_ != THREAD_READY)
     {
@@ -350,7 +353,7 @@ err_t Thread::resume()
 {
     register base_t temp;
 
-    COS_DEBUG_LOG(COS_DEBUG_THREAD, ("thread resume:  %s\n", name_));
+    COS_DEBUG_LOG(COS_DEBUG_THREAD, ("thread resume:  %s\n", name_.c_str()));
 
     if (stat_ != THREAD_SUSPEND)
     {
@@ -405,6 +408,8 @@ void Thread::timeout(void *parameter)
 
     /* do schedule */
     Scheduler::process();
+
+
 }
 
 /**

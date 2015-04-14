@@ -4,6 +4,7 @@
 #include "console.h"
 #include "Video.h"
 
+extern unsigned long _end;
 
 extern unsigned char __bss_start[];
 extern unsigned char __bss_end[];
@@ -19,6 +20,21 @@ static void clear_bss(void)
 
 void app_init();
 
+void entry(void *p)
+{
+    while(1) {
+        printk("hello! %d\n", 111);
+
+        Thread::sleep(1000);
+    }
+}
+void entry2(void *p)
+{
+    //while(1) {
+        printk("hello! 222222%d\n", 111);
+        //Thread::sleep(1000);
+    //}
+}
 int main(){
     /* clear .bss */
     clear_bss();
@@ -28,7 +44,7 @@ int main(){
 
     /* init memory system */
     /* RAM 32M */
-    system_heap_init((void *)&__bss_end, (void *)(1024UL*1024*32));
+    system_heap_init((void *)&__bss_end, (void *)(1024UL*1024*16));
 
     /* init the c\c++ runtime environment */
     Runtime::boot_strap();
@@ -55,6 +71,8 @@ int main(){
     /* start scheduler */
     Scheduler::start();
 
+
+    while(1);
     /* never reach here */
 
     /* exit the c\c++ runtime environment */
@@ -62,14 +80,10 @@ int main(){
 
     return 0;
 }
+
 uint8_t thread_stack[512];
-void entry(void *p)
-{
-    while(1) {
-        printk("hello!\n");
-        Thread::sleep(1000);
-    }
-}
+
+
 
 void app_init()
 {

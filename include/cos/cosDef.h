@@ -9,10 +9,15 @@
 
 #ifdef __cplusplus
 
+//stl
 #include <string>
 #include <map>
 #include <list>
 #include <set>
+
+//coslib
+#include <list.hpp>
+#include <rbtree.hpp>
 
 extern "C" {
 #endif

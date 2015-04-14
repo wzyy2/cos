@@ -1,5 +1,6 @@
 BuildOptions = {
     'CONFIG_LWIP' : 'y',
+    #'COS_DEBUG' : 'y',
 
     'CONFIG_TICK_PER_SECOND' : '1000',
     'CONFIG_CONSOLEBUF_SIZE' : '256',

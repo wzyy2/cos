@@ -177,7 +177,7 @@ isr_handler_t arch_interrupt_install(int vector, isr_handler_t new_handler, void
 
 void arch_interrupt_enable(base_t level)
 {
-    __asm__ __volatile__("pushl %0 ; popfl; sti":/* no output */ :"g" (level):"memory", "cc");
+    __asm__ __volatile__("pushl %0 ; popfl; sti":/* no intput */ :"g" (level):"memory", "cc");
 }
 
 base_t arch_interrupt_disable()

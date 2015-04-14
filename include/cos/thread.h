@@ -62,13 +62,13 @@ public:
     static const uint8_t CTRL_CHANGE_PRIORITY = 0x02;                /**< Change thread priority. */
     static const uint8_t CTRL_INFO = 0x03;                /**< Get thread information. */
 
-    struct Compare{
-        bool operator () (const Thread *p1, const Thread *p2) const
-        {
-            //small to big
-            return p1->current_priority_ < p2->current_priority_;
-        }
-    };
+    //    struct Compare{
+    //        bool operator () (const Thread *p1, const Thread *p2) const
+    //        {
+    //            //small to big
+    //            return p1->current_priority_ < p2->current_priority_;
+    //        }
+    //    };
 private:
     static std::set<Thread *> thread_set_;  /**< the thread set */
 
@@ -94,6 +94,8 @@ private:
     Timer *thread_timer_;                       /**< built-in thread timer */
 
     uint32_t user_data_;                              /**< private user data beyond this thread */
+
+    coslib::RBTree<Thread>::RBTreeNode * node_;
 
 };
 

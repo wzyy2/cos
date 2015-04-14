@@ -24,7 +24,7 @@ void Runtime::boot_strap()
     
     //the first int is the number of constructors
     int total = *(int *)constructor;
-    
+
     //increment to first constructor
     constructor++;
     
