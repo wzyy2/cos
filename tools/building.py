@@ -154,7 +154,7 @@ def PrepareBuilding(env, root_directory, has_libcpu=False, remove_components = [
     # we need to seperate the variant_dir for BSPs and the kernels. BSPs could
     # have their own components etc. If they point to the same folder, SCons
     # would find the wrong source code to compile.
-    build_dir = 'build/'
+    build_dir = 'build/' + settings.ARCH
     # build script
     objs = SConscript('SConscript', variant_dir=build_dir, duplicate=0)
 
@@ -178,4 +178,24 @@ def EndBuilding(target, program = None):
     import settings
 
     Env.AddPostAction(target, settings.POST_ACTION)
+
+
+def UnitTest(objects):
+    program = None
+
+    # merge the repeated items in the Env
+    if Env.has_key('CPPPATH')   : Env['CPPPATH'] = list(set(Env['CPPPATH']))
+    if Env.has_key('CPPDEFINES'): Env['CPPDEFINES'] = list(set(Env['CPPDEFINES']))
+    if Env.has_key('LIBPATH')   : Env['LIBPATH'] = list(set(Env['LIBPATH']))
+    if Env.has_key('LIBS')      : Env['LIBS'] = list(set(Env['LIBS']))
+
+    global Cos_root
+    target = 'build/test/'
+
+    test_dir = os.path.join(Cos_root, 'unittest/coslib')
+    List = os.listdir(test_dir)
+    for item in List:
+        if os.path.splitext(item)[1] == '.cpp':
+            out = target + item + '.test'
+            program = Env.Program(out, objects + [os.path.join(test_dir, item)])
 

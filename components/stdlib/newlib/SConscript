@@ -11,7 +11,7 @@ CPPPATH = [cwd]
 # been referenced. So setting this won't result in bigger text size.
 LIBS = ['c', 'm']
 # LIBS = []
-group = DefineGroup('newlib', src, depend = [],
+group = DefineGroup('newlib', src, depend = ['CONFIG_STDLIB'],
                     CPPPATH = CPPPATH, LIBS = LIBS)
 
 Return('group')

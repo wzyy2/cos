@@ -33,7 +33,7 @@ Semaphore::~Semaphore()
 err_t Semaphore::detach()
 {
     /* wakeup all suspend threads */
-    //rt_ipc_list_resume_all(&(sem->parent.suspend_thread));
+    IPC::list_resume_all();
 
     /* detach semaphore object */
     Object::detach();
@@ -58,8 +58,8 @@ err_t Semaphore::take(int32_t time)
     temp = arch_interrupt_disable();
 
     COS_DEBUG_LOG(COS_DEBUG_IPC, ("thread %s take sem:%s, which value is: %d\n",
-                                Scheduler::get_current_thread()->name().c_str(),
-                                name_.c_str(),
+                                Scheduler::get_current_thread()->name(),
+                                name_,
                                 value_));
 
     if (value_ > 0)
@@ -92,36 +92,33 @@ err_t Semaphore::take(int32_t time)
             set_errno(ERR_OK);
 
             COS_DEBUG_LOG(COS_DEBUG_IPC, ("sem take: suspend thread - %s\n",
-                                        thread->name().c_str()));
+                                        thread->name()));
 
             /* suspend thread */
-//            rt_ipc_list_suspend(&(sem->parent.suspend_thread),
-//                                thread,
-//                                sem->parent.parent.flag);
+            IPC::list_suspend(thread);
 
             /* has waiting time, start thread timer */
             if (time > 0)
             {
                 COS_DEBUG_LOG(COS_DEBUG_IPC, ("set thread:%s to timer list\n",
-                                            thread->name().c_str()));
+                                            thread->name()));
 
                 /* reset the timeout of thread timer and start it */
-//                rt_timer_control(&(thread->thread_timer),
-//                                 RT_TIMER_CTRL_SET_TIME,
-//                                 &time);
-//                rt_timer_start(&(thread->thread_timer));
+                thread->thread_timer_->control(Timer::CTRL_SET_TIME,
+                                 &time);
+                thread->thread_timer_->start();
             }
 
             /* enable interrupt */
             arch_interrupt_enable(temp);
 
             /* do schedule */
-//            rt_schedule();
+            Scheduler::process();
 
-//            if (thread->error != ERR_OK)
-//            {
-//                return thread->error;
-//            }
+            if (thread->error_ != ERR_OK)
+            {
+                return thread->error_;
+            }
         }
     }
 
@@ -155,9 +152,8 @@ err_t Semaphore::release()
     temp = arch_interrupt_disable();
 
     COS_DEBUG_LOG(COS_DEBUG_IPC, ("thread %s releases sem:%s, which value is: %d\n",
-                                Scheduler::get_current_thread()->name().c_str(),
-                                name_.c_str(),
-                                value_));
+                                Scheduler::get_current_thread()->name(),
+                                name_, value_));
 
 //    if (!rt_list_isempty(&sem->parent.suspend_thread))
 //    {
@@ -196,12 +192,12 @@ err_t Semaphore::control(uint8_t cmd, void *arg)
         uint32_t value;
 
         /* get value */
-        value = (uint32_t)arg;
+        value = (ubase_t)arg;
         /* disable interrupt */
         level = arch_interrupt_disable();
 
         /* resume all waiting thread */
-        //rt_ipc_list_resume_all(&sem->parent.suspend_thread);
+        list_resume_all();
 
         /* set new value */
         value_ = (uint16_t)value;
@@ -209,7 +205,7 @@ err_t Semaphore::control(uint8_t cmd, void *arg)
         /* enable interrupt */
         arch_interrupt_enable(level);
 
-        //rt_schedule();
+        Scheduler::process();
 
         return ERR_OK;
     }

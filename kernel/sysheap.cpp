@@ -85,8 +85,8 @@ static void plug_holes(struct heap_mem *mem)
 void system_heap_init(void *begin_addr, void *end_addr)
 {
     struct heap_mem *mem;
-    uint32_t begin_align = WIDTH_ALIGN((uint32_t)begin_addr, CONFIG_ALIGN_SIZE);
-    uint32_t end_align = WIDTH_ALIGN_DOWN((uint32_t)end_addr, CONFIG_ALIGN_SIZE);
+    ubase_t begin_align = WIDTH_ALIGN((ubase_t)begin_addr, CONFIG_ALIGN_SIZE);
+    ubase_t end_align = WIDTH_ALIGN_DOWN((ubase_t)end_addr, CONFIG_ALIGN_SIZE);
 
     COS_DEBUG_NOT_IN_INTERRUPT;
 
@@ -100,7 +100,7 @@ void system_heap_init(void *begin_addr, void *end_addr)
     else
     {
         printk("mem init, error begin address 0x%x, and end address 0x%x\n",
-               (uint32_t)begin_addr, (uint32_t)end_addr);
+               (ubase_t)begin_addr, (ubase_t)end_addr);
 
         return;
     }

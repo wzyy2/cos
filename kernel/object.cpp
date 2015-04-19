@@ -22,7 +22,8 @@ Object::Object(object_class_type type, const char *name)
     type_ = type;
 
     /* copy name */
-    name_ = name;
+    strcpy(name_, name);
+
 
     /* lock interrupt */
     temp = arch_interrupt_disable();
@@ -98,7 +99,7 @@ Object *Object::find(const char *name, object_class_type type)
 }
 
 
-std::string Object::name()
+const char *Object::name()
 {
     return name_;
 }

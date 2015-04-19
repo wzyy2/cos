@@ -2,6 +2,7 @@
 #define _OBJECT_H
 
 #include <cos/cosDef.h>
+#include <cos/cosConf.h>
 
 /**
  * Base structure of Kernel object
@@ -21,14 +22,14 @@ public:
 
     explicit Object(object_class_type type, const char *name);
     virtual  ~Object();
-    std::string name();
+    const char *name();
 
 protected:
     void detach();
     static Object *find(const char *name, object_class_type type);
 
     uint16_t flag_ = 0;      /**< flag of kernel object */
-    std::string       name_;    /**< name of kernel object */
+    char  name_[CONFIG_NAME_NAX];    /**< name of kernel object */
     object_class_type type_;   /**< type of kernel object */
 
 private:

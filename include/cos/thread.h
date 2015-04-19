@@ -14,6 +14,9 @@ class Thread : public Object
 {
 public:
     friend class Scheduler;
+    friend class IPC;
+    friend class Semaphore;
+
     friend void tick_increase(void);
     friend err_t get_errno(void);
     friend void set_errno(err_t error);
@@ -95,8 +98,8 @@ private:
 
     uint32_t user_data_;                              /**< private user data beyond this thread */
 
-    coslib::RBTree<Thread>::RBTreeNode * node_;
-
+    coslib::RBTree<Thread>::RBTreeNode *node_;
+    coslib::List<Thread *>::Node *list_node_;
 };
 
 

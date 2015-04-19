@@ -31,7 +31,11 @@ extern "C" {
 /* cos version */
 #define COS_VERSION                ((C_VERSION * 10000) + \
                                          (C_VERSION * 100) + C_REVISION)
+/* 32bit CPU */
+typedef long                            base_t;      /**< Nbit CPU related date type */
+typedef unsigned long                   ubase_t;     /**< Nbit unsigned CPU related data type */
 
+#ifndef CONFIG_UNIT_TEST
 /* cos basic data type definitions */
 typedef signed   char                   int8_t;      /**<  8bit integer type */
 typedef signed   short                  int16_t;     /**< 16bit integer type */
@@ -42,15 +46,14 @@ typedef unsigned short                  uint16_t;    /**< 16bit unsigned integer
 typedef unsigned int                   uint32_t;    /**< 32bit unsigned integer type */
 typedef unsigned long long             uint64_t;
 
-/* 32bit CPU */
-typedef long                            base_t;      /**< Nbit CPU related date type */
-typedef unsigned long                   ubase_t;     /**< Nbit unsigned CPU related data type */
+typedef base_t                       off_t;       /**< Type for offset */
+#endif
 
 typedef base_t                       err_t;       /**< Type for error number */
 typedef ubase_t                     tick_t;      /**< Type for tick count */
 typedef base_t                       flag_t;      /**< Type for flags */
 typedef ubase_t                      size_t;      /**< Type for size number */
-typedef base_t                       off_t;       /**< Type for offset */
+
 
 //stdio
 // typedef ubase_t   (short)            dev_t;       /**< Type for device */  

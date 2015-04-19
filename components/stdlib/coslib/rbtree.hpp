@@ -4,7 +4,6 @@
 extern "C" void printk(const char *fmt, ...);
 
 namespace coslib{
-
     template<typename T> class RBTree {
     public:
         class RBTreeNode {
@@ -20,16 +19,8 @@ namespace coslib{
 
             RBTreeNode (unsigned long k, T * o, RBTree<T> * t) :
                 obj (o), key (k), color (RED), parent (NULL), tree (t) {
-                //I can't set global template var....
                 this->link[LEFT]  = NULL;
                 this->link[RIGHT] = NULL;
-
-                if (NULL == o)
-                {
-                    this->color = BLACK;
-                    this->link[LEFT] = NULL;
-                    this->link[RIGHT] = NULL;
-                }
             }
             ~RBTreeNode () {
                 if (this->link[LEFT] != NULL)
@@ -55,6 +46,7 @@ namespace coslib{
                     return LEFT;
                 else if (this->link[RIGHT] == &node)
                     return RIGHT;
+                return LEFT;
             }
 
             inline Side otherSide (Side s) {
@@ -76,13 +68,13 @@ namespace coslib{
 
             inline void attach (Side s, RBTreeNode &node) {
                 this->link[s] = &node;
-                if (! (&node == NULL))
+                if (&node != NULL)
                     node.parent = this;
             }
 
             inline RBTreeNode * detach (Side s) {
 
-                if (this == NULL || this->link[s]  == NULL)
+                if (this == NULL || this->link[s] == NULL)
                     return NULL;
 
                 RBTreeNode * node = this->link[s];
@@ -99,15 +91,13 @@ namespace coslib{
                 return NULL;
             }
             inline RBTreeNode * searchMax () {
-                if (! (this->link[RIGHT] == NULL))
+                if (this->link[RIGHT] != NULL)
                     return this->link[RIGHT]->searchMax ();
                 else
                     return this;
             }
             inline RBTreeNode * searchMin () {
-
-
-                if (! (this->link[LEFT] == NULL))
+                if (this->link[LEFT] != NULL)
                     return this->link[LEFT]->searchMin ();
                 else
                     return this;
@@ -134,7 +124,7 @@ namespace coslib{
 
                 nParent->attach (s, *this);
 
-                if (! (nLeaf == NULL))
+                if (nLeaf != NULL)
                     this->attach (r, *nLeaf);
             }
 
@@ -177,16 +167,9 @@ namespace coslib{
 
             bool insert (RBTreeNode &node)
             {
-//                if (this->key == node.key)
-//                {
-//                    // duplicated
-//                    return false;
-//                }
-//                else
                 {
                     Side s = (node.key < this->key ? LEFT : RIGHT);
-
-                    if (! (this->link[s]  == NULL ))
+                    if (this->link[s] != NULL)
                         return this->link[s]->insert (node);
                     else
                         this->attach (s, node);
@@ -211,7 +194,7 @@ namespace coslib{
                 // only detach from tree, balancing color & tree in adjustLeave ()
                 RBTreeNode * cParent = this->parent;
 
-                if (this->link[LEFT] == NULL && this->link[RIGHT] == NULL) {
+                if (this->link[LEFT] == NULL && this->link[RIGHT]  == NULL) {
                     if (cParent) {
                         Side s = cParent->whichSide (*this);
                         cParent->detach (*this);
@@ -339,10 +322,10 @@ namespace coslib{
                     return 0;
 
                 int size = 1;
-                if (! (this->link[RIGHT] == NULL)){
+                if (this->link[RIGHT] != NULL){
                     size += this->link[RIGHT]->count_size();
                 }
-                if (! (this->link[LEFT] == NULL)) {
+                if (this->link[LEFT] != NULL) {
                     size += this->link[LEFT]->count_size() ;
                 }
                 return size;
@@ -351,15 +334,14 @@ namespace coslib{
             void attach_tree(RBTree<T> * t){
                 tree = t;
             }
-
-            T * obj;
-            unsigned long key;
-
+            void set_key(unsigned long k){
+                key = k;
+            }
         private:
             friend class RBTree<T>;
 
-
-
+            T * obj;
+            unsigned long key;
             Color color;
             RBTreeNode * parent, * link[2];
             RBTree<T> * tree;
@@ -367,14 +349,10 @@ namespace coslib{
 
         RBTreeNode *root;
 
-
+        RBTreeNode *max_key_node = NULL;
 
     public:
-        //        static RBTreeNode  *nil ;
-
-        RBTree () : root (NULL) {
-
-        }
+        RBTree () : root (NULL) {}
         ~RBTree () {
             delete this->root;
         }
@@ -437,10 +415,7 @@ namespace coslib{
 
         bool remove (RBTreeNode * node)
         {
-            if (NULL == this->root)
-                return false;
-
-            if (NULL == node)
+            if (NULL == this->root || NULL == node || NULL == node->tree)
                 return false;
 
             node->leave();
@@ -463,7 +438,7 @@ namespace coslib{
 
         bool empty()
         {
-            if(this->root != NULL)
+            if(root != NULL)
                 return false;
             return true;
         }
@@ -475,7 +450,6 @@ namespace coslib{
                 return 0;
             return root->count_size();
         }
-
     };
 
 }

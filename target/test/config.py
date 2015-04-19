@@ -1,7 +1,5 @@
 BuildOptions = {
-    'CONFIG_STDLIB' : 'y',
-    'COS_DEBUG' : 'y',
-    #'COS_DEBUG_SCHEDULER' : '1',
+    'CONFIG_UNIT_TEST' : 'y',
 
     'CONFIG_NAME_NAX' : '32',
     'CONFIG_TICK_PER_SECOND' : '1000',

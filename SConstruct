@@ -34,7 +34,10 @@ Export('settings')
 # prepare building environment
 objs = PrepareBuilding(env, COS_ROOT)
 
-# make a building
-DoBuilding(TARGET, objs)
+if TAR == 'test':
+    UnitTest(objs)
+else:
+    # make a building
+    DoBuilding(TARGET, objs)
 
 #Env.Command(None, Target + '.elf', SIZE + " $SOURCE")

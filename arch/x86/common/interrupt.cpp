@@ -83,6 +83,8 @@ void arch_idt_init(void)
  */
 extern "C" void arch_trap_irq(int trapno)
 {
+    arch_interrupt_disable();
+
     switch(trapno)
     {
     case T_DIVIDE:
@@ -177,7 +179,8 @@ isr_handler_t arch_interrupt_install(int vector, isr_handler_t new_handler, void
 
 void arch_interrupt_enable(base_t level)
 {
-    __asm__ __volatile__("pushl %0 ; popfl; sti":/* no intput */ :"g" (level):"memory", "cc");
+    //if not enable, not enable
+    __asm__ __volatile__("pushl %0 ; popfl;":/* no intput */ :"g" (level):"memory", "cc");
 }
 
 base_t arch_interrupt_disable()

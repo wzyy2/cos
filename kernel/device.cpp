@@ -54,7 +54,7 @@ err_t Device::init()
         if (result != ERR_OK)
         {
             printk("ERROR : To initialize device:%s failed. The error code is %d\n",
-                       name_.c_str(), result);
+                       name_, result);
         }
         else
         {
@@ -83,7 +83,7 @@ err_t Device::open(uint16_t oflag)
         if (result != ERR_OK)
         {
             printk("ERROR : To initialize device:%s failed. The error code is %d\n",
-                       name_.c_str(), result);
+                       name_, result);
         }
         else
         {

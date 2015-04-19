@@ -2,6 +2,8 @@
 
 #include <cos/cos.h>
 
+#ifndef CONFIG_UNIT_TEST
+
 extern init_fn_t __cos_init_start;
 extern init_fn_t __cos_init_end;
 
@@ -11,10 +13,14 @@ extern init_fn_t __cos_init_end;
  */
 void export_runtime_init(void)
 {
+
     const init_fn_t *fn_ptr;
 
     for (fn_ptr = &__cos_init_start; fn_ptr < &__cos_init_end; fn_ptr ++)
     {
         (*fn_ptr)();
     }
+
 }
+
+#endif

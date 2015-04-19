@@ -101,7 +101,7 @@ err_t Timer::start()
 
     flag_ |= Timer::FLAG_ACTIVATED;
 
-    node_->key = timeout_tick_;
+    node_->set_key(timeout_tick_);
     timer_tree_.insert(node_);
 
     /* enable interrupt */
@@ -186,11 +186,11 @@ void Timer::check(void)
 
     current_tick = tick_get();
 
+    /* disable interrupt */
+    //level = arch_interrupt_disable();
+
     /* enter critical */
     //    Scheduler::enter_critical();
-
-    /* disable interrupt */
-    level = arch_interrupt_disable();
 
     while (!timer_tree_.empty())
     {
@@ -226,6 +226,7 @@ void Timer::check(void)
                 /* stop timer */
                 t->flag_ &= ~Timer::FLAG_ACTIVATED;
             }
+
         }
         else
             break;
@@ -235,10 +236,8 @@ void Timer::check(void)
     //    Scheduler::exit_critical();
 
     /* enable interrupt */
-    arch_interrupt_enable(level);
+    //arch_inerrupt_enable(level);
 
     COS_DEBUG_LOG(COS_DEBUG_TIMER, ("timer check leave\n"));
 }
-
-
 /*@}*/

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 3.3.0, 2015-04-14T15:19:23. -->
+<!-- Written by QtCreator 3.3.0, 2015-04-18T17:04:26. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -79,7 +79,7 @@
      </valuemap>
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.1">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
-      <value type="QString" key="ProjectExplorer.ProcessStep.Arguments"> -f  cos.elf /Volumes/aa/boot</value>
+      <value type="QString" key="ProjectExplorer.ProcessStep.Arguments"> -f  cos.elf /Volumes/AA/boot</value>
       <value type="QString" key="ProjectExplorer.ProcessStep.Command">cp</value>
       <value type="QString" key="ProjectExplorer.ProcessStep.WorkingDirectory">%{buildDir}</value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">自定义进程步骤</value>

@@ -12,7 +12,7 @@ public:
     static void excute(void);
 
 private:
-    ALIGN(CONFIG_ALIGN_SIZE)
+
     static uint8_t thread_stack[1024];
 
     Idle();

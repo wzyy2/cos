@@ -2,6 +2,7 @@
 
 #include <cos/cos.h>
 
+ALIGN(CONFIG_ALIGN_SIZE)
 uint8_t Idle::thread_stack[1024];
 
 Idle::Idle():Thread("idle", entry, NULL, &Idle::thread_stack[0] \
@@ -33,13 +34,13 @@ void Idle::excute(void)
         lock = arch_interrupt_disable();
 
         /* re-check whether list is empty */
-        if (Scheduler::defunct_list_.size())
+        if (!Scheduler::defunct_list_.empty())
         {
             /* get defunct thread */
             thread = Scheduler::defunct_list_.front();
 
             /* remove defunct thread */
-            Scheduler::defunct_list_.pop_front();
+            Scheduler::remove_defunct_thread(thread);
 
             delete thread;
         }

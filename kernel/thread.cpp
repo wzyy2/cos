@@ -105,7 +105,7 @@ err_t Thread::startup()
     /* calculate priority attribute */
 
     COS_DEBUG_LOG(COS_DEBUG_THREAD, ("startup a thread:%s with priority:%d\n",
-                                     name_.c_str(), init_priority_));
+                                     name_, init_priority_));
     /* change thread stat */
     stat_ = THREAD_SUSPEND;
     /* then resume it */
@@ -317,7 +317,7 @@ err_t Thread::suspend()
 {
     register base_t temp;
 
-    COS_DEBUG_LOG(COS_DEBUG_THREAD, ("thread suspend:  %s\n", name_.c_str()));
+    COS_DEBUG_LOG(COS_DEBUG_THREAD, ("thread suspend:  %s\n", name_));
 
     if (stat_ != THREAD_READY)
     {
@@ -353,7 +353,7 @@ err_t Thread::resume()
 {
     register base_t temp;
 
-    COS_DEBUG_LOG(COS_DEBUG_THREAD, ("thread resume:  %s\n", name_.c_str()));
+    COS_DEBUG_LOG(COS_DEBUG_THREAD, ("thread resume:  %s\n", name_));
 
     if (stat_ != THREAD_SUSPEND)
     {
@@ -367,7 +367,7 @@ err_t Thread::resume()
     temp = arch_interrupt_disable();
 
     /* remove from suspend list */
-    Scheduler::remove_thread(this);
+
 
     thread_timer_->stop();
 
@@ -400,8 +400,7 @@ void Thread::timeout(void *parameter)
     thread->error_ = -ERR_TIMEOUT;
 
     /* remove from suspend list */
-    //rt_list_remove(&(thread->tlist));
-    Scheduler::remove_thread(thread);
+
 
     /* insert to schedule ready list */
     Scheduler::insert_thread(thread);

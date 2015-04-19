@@ -18,6 +18,7 @@ public:
     static void remove_thread(Thread *thread);
 
     static void insert_defunct_thread(Thread *thread);
+    static void remove_defunct_thread(Thread *thread);
 
     static void enter_critical();
     static void exit_critical();
@@ -26,6 +27,10 @@ public:
     static Thread *get_current_thread();
 
     static const uint8_t THREAD_PRIORITY_MAX = 255;
+
+
+    static coslib::List<Thread *> defunct_list_;  /**< the defunct thread list */
+
 
 private:
     Scheduler();
@@ -38,9 +43,6 @@ private:
 
 
     static coslib::RBTree<Thread> thread_tree_;  /**< the thread tree */
-
-
-    static std::list<Thread *> defunct_list_;  /**< the defunct thread list */
 
 };
 

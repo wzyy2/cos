@@ -63,15 +63,15 @@ spin:
 .data
 .p2align    2
 mygdt:
-    .word   0,0,0,0
+    .word   0,0,0,0    /*16bytes*/
 
-    .word   0x07FF      /* 8Mb - limit=2047 */
-    .word   0x0000
+    .word   0xFFFF      /*4Gb - (0x100000*0x1000 = 4Gb)*/
+    .word   0x0000      # base address = 0
     .word   0x9A00      /* code read/exec */
     .word   0x00C0
 
-    .word   0x07FF      /* 8Mb - limit=2047 */
-    .word   0x0000
+    .word   0xFFFF      # 4Gb - (0x100000*0x1000 = 4Gb)
+    .word   0x0000      # base address = 0
     .word   0x9200      /* data read/write */
     .word   0x00C0
 

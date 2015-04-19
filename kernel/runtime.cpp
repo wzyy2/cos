@@ -3,11 +3,11 @@
 
 #include <cos/cos.h>
 
+bool Runtime::down_flag = false;
+
+#ifndef CONFIG_UNIT_TEST
 
 void * __dso_handle = 0;
-
-
-bool Runtime::down_flag = false;
 
 /**
  *	This function will call the constructors
@@ -106,3 +106,5 @@ namespace std{
         printk("terminate()\n");
     }
 }
+
+#endif

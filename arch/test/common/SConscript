@@ -1,0 +1,13 @@
+Import('COS_ROOT')
+Import('settings')
+from building import *
+
+cwd  = GetCurrentDir()
+
+src = Glob('*.c') + Glob('*.cpp') + Glob('*.S')
+
+CPPPATH = [cwd]
+
+group = DefineGroup('x86-common', src, depend = [''], CPPPATH = CPPPATH)
+
+Return('group')

@@ -21,7 +21,8 @@
 #include <cos/timer.h>
 #include <cos/scheduler.h>
 #include <cos/idle.h>
-
+#include <cos/ipc.h>
+#include <cos/semaphore.h>
 #endif
 
 

@@ -6,7 +6,7 @@ src = Glob('*.c') + Glob('*.cpp') + Glob('*.S')
 CPPPATH = [cwd]
 
 
-group = DefineGroup('libstl', src, depend = [],
+group = DefineGroup('libstl', src, depend = ['CONFIG_STDLIB'],
                     CPPPATH = CPPPATH)
 
 Return('group')
