@@ -18,8 +18,8 @@ public:
     static const uint8_t FLAG_PRIO = 0x01;  /**< PRIOed IPC. @ref IPC. */
     static const uint8_t CMD_UNKNOWN = 0x00;    /**< unknown IPC command */
     static const uint8_t CMD_RESET = 0x01;  /**< reset IPC object */
-    static const uint8_t WAITING_FOREVER = -1;  /**< Block forever until get resource. */
-    static const uint8_t WAITING_NO = 0;     /**< Non-block. */
+    static const int8_t WAITING_FOREVER = -1;  /**< Block forever until get resource. */
+    static const int8_t WAITING_NO = 0;     /**< Non-block. */
 
     err_t list_suspend(Thread *thread);
     err_t list_resume();

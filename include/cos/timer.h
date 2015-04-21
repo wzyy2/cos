@@ -55,9 +55,9 @@ private:
 //        }
 //    };
 
-    coslib::RBTree<Timer>::RBTreeNode * node_;
+    coslib::RBTree<Timer *>::Node * node_;
 
-    static coslib::RBTree<Timer> timer_tree_;  /**< timeout tree */
+    static coslib::RBTree<Timer *> timer_tree_;  /**< timeout tree */
 };
 
 

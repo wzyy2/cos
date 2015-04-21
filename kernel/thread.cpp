@@ -57,7 +57,8 @@ Thread::Thread(const char       *name,
     /* init thread timer */
     thread_timer_ = new Timer(name, Thread::timeout, this, 0, Timer::FLAG_ONE_SHOT);
 
-    node_ = new coslib::RBTree<Thread>::RBTreeNode (current_priority_, this, NULL);
+    node_ = new coslib::RBTree<Thread *>::Node (current_priority_, this);
+    list_node_ = new coslib::List<Thread *>::Node (this);
 }
 
 Thread::~Thread()
@@ -169,7 +170,7 @@ err_t Thread::detach(bool delete_later)
  */
 err_t Thread::yield(void)
 {
-    register base_t level;
+    base_t level;
     Thread *thread;
 
     /* disable interrupt */
@@ -182,9 +183,9 @@ err_t Thread::yield(void)
     if (thread->stat_ == THREAD_READY)
     {
         /* remove thread from thread set */
-        Scheduler::remove_thread(thread);
+        //Scheduler::remove_thread(thread);
         /* put thread to end of ready queue */
-        Scheduler::insert_thread(thread);
+        //Scheduler::insert_thread(thread);
 
         /* enable interrupt */
         arch_interrupt_enable(level);
@@ -400,7 +401,6 @@ void Thread::timeout(void *parameter)
     thread->error_ = -ERR_TIMEOUT;
 
     /* remove from suspend list */
-
 
     /* insert to schedule ready list */
     Scheduler::insert_thread(thread);

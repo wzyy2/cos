@@ -3,6 +3,7 @@
 #include <cos/cos.h>
 #include <cos/semaphore.h>
 
+
 static size_t used_mem, max_mem;
 
 /* will only be created when runtime_bootstrap have been called */

@@ -16,10 +16,10 @@
 
 #ifdef __cplusplus
 #include <cos/runtime.h>
+#include <cos/scheduler.h>
 #include <cos/thread.h>
 #include <cos/device.h>
 #include <cos/timer.h>
-#include <cos/scheduler.h>
 #include <cos/idle.h>
 #include <cos/ipc.h>
 #include <cos/semaphore.h>

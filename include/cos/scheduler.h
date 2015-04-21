@@ -41,8 +41,7 @@ private:
 
     static int16_t lock_nest_;
 
-
-    static coslib::RBTree<Thread> thread_tree_;  /**< the thread tree */
+    static coslib::RBTree<Thread *> thread_tree_;  /**< the thread tree */
 
 };
 

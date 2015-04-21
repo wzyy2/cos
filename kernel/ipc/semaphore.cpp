@@ -155,21 +155,20 @@ err_t Semaphore::release()
                                 Scheduler::get_current_thread()->name(),
                                 name_, value_));
 
-//    if (!rt_list_isempty(&sem->parent.suspend_thread))
-//    {
-//        /* resume the suspended thread */
-//        rt_ipc_list_resume(&(sem->parent.suspend_thread));
-//        need_schedule = RT_TRUE;
-//    }
-//    else
+    if (IPC::list_resume() == ERR_OK)
+    {
+        /* resume the suspended thread */
+        need_schedule = true;
+    }
+    else
         value_ ++; /* increase value */
 
     /* enable interrupt */
     arch_interrupt_enable(temp);
 
     /* resume a thread, re-schedule */
-//    if (need_schedule == RT_TRUE)
-//        rt_schedule();
+    if (need_schedule == true)
+        Scheduler::process();
 
     return ERR_OK;
 }

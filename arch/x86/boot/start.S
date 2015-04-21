@@ -79,4 +79,5 @@ mygdtdesc:
     .word   0x17
     .long   mygdt
 
+
 /*@}*/

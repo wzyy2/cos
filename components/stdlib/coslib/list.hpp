@@ -9,6 +9,11 @@
 
 #ifndef LIST_HPP
 #define LIST_HPP
+
+#ifndef NULL
+#define NULL 0
+#endif
+
 namespace coslib{
 
     template<class T>
@@ -67,14 +72,14 @@ namespace coslib{
             int i = 0;
             Node *p = _pHead;
             while(p != NULL){
-                p++;
+                p = p->_pNext;
                 i++;
             }
             return i;
         }
 
         bool empty(){
-            if(_pHead != NULL)
+            if(_pHead == NULL)
                 return true;
             else
                 return false;

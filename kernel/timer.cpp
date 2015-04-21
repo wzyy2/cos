@@ -8,7 +8,7 @@
 
 /*@{*/
 
-coslib::RBTree<Timer> Timer::timer_tree_;
+coslib::RBTree<Timer *> Timer::timer_tree_;
 
 /**
  * This function will initialize a timer, normally this function is used to
@@ -37,7 +37,7 @@ Timer::Timer(const char *name,
 
     timeout_tick_ = 0;
     init_tick_    = time;
-    node_ = new coslib::RBTree<Timer>::RBTreeNode (timeout_tick_, this, NULL);
+    node_ = new coslib::RBTree<Timer *>::Node (timeout_tick_, this, NULL);
 
 }
 
@@ -55,7 +55,7 @@ Timer::~Timer()
  */
 err_t Timer::detach()
 {
-    register    base_t level;
+    register   base_t level;
 
     /* disable interrupt */
     level = arch_interrupt_disable();
@@ -180,14 +180,14 @@ err_t Timer::control(uint8_t cmd, void *arg)
 void Timer::check(void)
 {
     tick_t current_tick;
-    register base_t level;
+    base_t level;
 
     COS_DEBUG_LOG(COS_DEBUG_TIMER, ("timer check enter\n"));
 
     current_tick = tick_get();
 
     /* disable interrupt */
-    //level = arch_interrupt_disable();
+    level = arch_interrupt_disable();
 
     /* enter critical */
     //    Scheduler::enter_critical();
@@ -230,13 +230,14 @@ void Timer::check(void)
         }
         else
             break;
+
     }
 
     //    /* unlock scheduler */
     //    Scheduler::exit_critical();
 
     /* enable interrupt */
-    //arch_inerrupt_enable(level);
+    arch_interrupt_enable(level);
 
     COS_DEBUG_LOG(COS_DEBUG_TIMER, ("timer check leave\n"));
 }

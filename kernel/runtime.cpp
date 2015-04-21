@@ -27,7 +27,7 @@ void Runtime::boot_strap()
 
     //increment to first constructor
     constructor++;
-    
+
     while(total)
     {
         (*constructor)();
@@ -38,6 +38,9 @@ void Runtime::boot_strap()
     libc_system_init("NULL");
 
     Runtime::down_flag = true;
+
+    //ugly trick here(due to gcc bug)
+    coslib::RBTree<Thread *>::nil = new coslib::RBTree<Thread *>::Node();
 }
 
 /*

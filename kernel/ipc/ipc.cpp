@@ -24,6 +24,7 @@ IPC::~IPC()
  */
 err_t IPC::list_suspend(Thread *thread){
     thread->suspend();
+
     switch (thread->flag_)
     {
     case FLAG_FIFO:
@@ -49,8 +50,10 @@ err_t IPC::list_suspend(Thread *thread){
  */
 err_t IPC::list_resume(){
     Thread *thread = suspend_list_.front();
+
     if(thread == NULL)
-        return ERR_OK;
+        return ERR_ERROR;
+
     COS_DEBUG_LOG(COS_DEBUG_IPC, ("resume thread:%s\n", thread->name()));
     /* resume it */
     suspend_list_.erase(thread->list_node_);
@@ -79,7 +82,7 @@ err_t IPC::list_resume_all(){
 
         /* get next suspend thread */
         thread = suspend_list_.front();
-        /* set error code to RT_ERROR */
+        /* set error code to ERR_ERROR */
         thread->error_ = -ERR_ERROR;
 
         thread->resume();

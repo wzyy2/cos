@@ -7,7 +7,7 @@ int16_t Scheduler::lock_nest_ = 0;
 Thread *Scheduler::current_thread_ = NULL;
 uint8_t Scheduler::current_priority_ = THREAD_PRIORITY_MAX - 1;
 
-coslib::RBTree<Thread> Scheduler::thread_tree_;
+coslib::RBTree<Thread *> Scheduler::thread_tree_;
 
 coslib::List<Thread *> Scheduler::defunct_list_;
 
@@ -48,7 +48,6 @@ void Scheduler::process()
     /* check the scheduler is enabled or not */
     if (lock_nest_ == 0)
     {
-
         /* get switch to thread */
         to_thread = thread_tree_.min();
 
@@ -70,8 +69,8 @@ void Scheduler::process()
 
             if (interrupt_get_nest() == 0)
             {
-                arch_context_switch((unsigned long)&from_thread->sp_,
-                                     (unsigned long)&to_thread->sp_);
+                arch_context_switch((ubase_t)&from_thread->sp_,
+                                     (ubase_t)&to_thread->sp_);
 
             }
             else
@@ -110,8 +109,8 @@ void Scheduler::insert_thread(Thread *thread)
     thread_tree_.insert(thread->node_);
 
     /* set priority mask */
-//    COS_DEBUG_LOG(COS_DEBUG_SCHEDULER, ("insert thread[%s], the priority: %d\n",
-//                                      thread->name_.c_str(), thread->current_priority_));
+    COS_DEBUG_LOG(COS_DEBUG_SCHEDULER, ("insert thread[%s], the priority: %d\n",
+                                      thread->name_, thread->current_priority_));
 
 
     //rt_thread_ready_priority_group |= thread->number_mask_;
@@ -136,9 +135,9 @@ void Scheduler::remove_thread(Thread *thread)
     /* disable interrupt */
     temp = arch_interrupt_disable();
 
-//    COS_DEBUG_LOG(COS_DEBUG_SCHEDULER, ("remove thread[%s], the priority: %d\n",
-//                                      thread->name_.c_str(),
-//                                      thread->current_priority_));
+    COS_DEBUG_LOG(COS_DEBUG_SCHEDULER, ("remove thread[%s], the priority: %d\n",
+                                      thread->name_,
+                                      thread->current_priority_));
 
     /* remove thread from ready list */
     thread_tree_.remove(thread->node_);

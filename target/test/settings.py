@@ -26,7 +26,7 @@ DEVICE = ' -mtune=generic'
 
 CFLAGS = DEVICE + ' -Wall'
 AFLAGS = ' -c' + DEVICE + ' -x assembler-with-cpp'
-LFLAGS = DEVICE + '  -lcppunit -ldl'
+LFLAGS = DEVICE + '  -gc-sections  -lgtest -ldl'
 
 if platform.system() == 'Darwin':
     LFLAGS += ' -I/opt/local/include -L/opt/local/lib'

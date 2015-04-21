@@ -180,6 +180,12 @@ def EndBuilding(target, program = None):
     Env.AddPostAction(target, settings.POST_ACTION)
 
 
+
+def runUnitTest(env,target,source):
+    import subprocess
+    app = str(source[0].abspath)
+    subprocess.call(app)
+
 def UnitTest(objects):
     program = None
 
@@ -190,12 +196,14 @@ def UnitTest(objects):
     if Env.has_key('LIBS')      : Env['LIBS'] = list(set(Env['LIBS']))
 
     global Cos_root
-    target = 'build/test/'
+    target = 'build/test/out/'
 
     test_dir = os.path.join(Cos_root, 'unittest/coslib')
     List = os.listdir(test_dir)
     for item in List:
         if os.path.splitext(item)[1] == '.cpp':
-            out = target + item + '.test'
+            out = target + os.path.splitext(item)[0] + '.test'
             program = Env.Program(out, objects + [os.path.join(test_dir, item)])
+            Command(item, out, runUnitTest)
+
 

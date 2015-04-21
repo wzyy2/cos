@@ -84,7 +84,7 @@ void arch_idt_init(void)
 extern "C" void arch_trap_irq(int trapno)
 {
     arch_interrupt_disable();
-
+    printk("tarp %d\n", trapno);
     switch(trapno)
     {
     case T_DIVIDE:

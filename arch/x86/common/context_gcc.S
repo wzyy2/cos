@@ -1,6 +1,3 @@
-/*
- * void rt_hw_context_switch(rt_uint32 from, rt_uint32 to);
- */
 .globl arch_context_switch
 arch_context_switch:
 	pushfl					/*pushed eflags*/
@@ -65,7 +62,7 @@ arch_context_switch_to:
 	iret
 
 /*
- * void arch_context_switch_interrupt(uint32 from, rt_uint32 to);
+ * void arch_context_switch_interrupt(ubase_t from, ubase_t to);
  */
 .globl thread_switch_interrupt_flag
 .globl interrupt_from_thread
