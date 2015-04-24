@@ -1,3 +1,11 @@
+/*
+ * (C) 2015 Copyright by Jacob Chen.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
 #ifndef _ARCH_H_
 #define _ARCH_H_
 
@@ -64,7 +72,10 @@ extern "C" {
 
 #define INTTIMER0           0
 #define INTKEYBOARD         1
-#define INTUART0_RX         4
+#define INT2                2
+#define INTCOM2             3
+#define INTCOM1             4
+#define INTMOUSE            12
 
 /* I/O Addresses of the two 8259A programmable interrupt controllers */
 #define IO_PIC1             0x20    /* Master(IRQs 0-7) */
@@ -98,6 +109,9 @@ extern "C" {
 /*******************************************************************/
 /*Serial I/O code */
 #define COM1                0x3F8
+#define COM2                0x2F8
+#define COM3                0x3E8
+#define COM4                0x2E8
 #define COMSTATUS           5
 #define COMDATA             0x01
 #define COMREAD             0
@@ -114,7 +128,7 @@ extern "C" {
 #define ERFIFO              0x80    /* Error receive Fifo */
 
 uint8_t *arch_stack_init(void *tentry, void *parameter,
-    uint8_t *stack_addr, void *texit);
+                         uint8_t *stack_addr, void *texit);
 
 #ifdef __cplusplus
 }

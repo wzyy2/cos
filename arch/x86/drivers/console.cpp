@@ -1,3 +1,11 @@
+/*
+ * (C) 2015 Copyright by Jacob Chen.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
 #include "console.h"
 
 #include <arch/arch.h>
@@ -26,9 +34,9 @@
 
 Console *Console::self = NULL;
 
-int Console::shiftcode[256];
+uint8_t Console::shiftcode[256];
 
-int Console::togglecode[256];
+uint8_t Console::togglecode[256];
 
 const char Console::normalmap[256] =
 {
@@ -109,13 +117,13 @@ bool Console::Destroy()
 Console::Console():Device(Device::Device_Class_Char,
                           "console", Device::FLAG_RDWR | Device::FLAG_INT_RX | Device::FLAG_STREAM)
 {
-    memset(shiftcode, CTL, 29);
-    memset(shiftcode + 29, SHIFT, 96);
-    memset(shiftcode + 29 + 96, ALT, 56);
-
-    memset(togglecode, CAPSLOCK, 58);
-    memset(togglecode + 58, NUMLOCK, 69);
-    memset(togglecode + 58 + 69, SCROLLOCK, 70);
+    shiftcode[29] = CTL;
+    shiftcode[42] = SHIFT;
+    shiftcode[54] = SHIFT;
+    shiftcode[56] = ALT;
+    togglecode[58] = CAPSLOCK;
+    togglecode[69] = NUMLOCK;
+    togglecode[70] = SCROLLOCK;
 }
 
 Console::~Console()
@@ -130,7 +138,7 @@ char Console::keyboard_getc(void)
 {
     int c;
     uint8_t data;
-    static uint32_t shift;
+    static uint32_t shift = 0;
 
     if ((inb(KBSTATP) & KBS_DIB) == 0)
         return -1;
@@ -139,6 +147,7 @@ char Console::keyboard_getc(void)
 
     if (data & 0x80)
     {
+        //printk("key up\n");
         /* key up */
         shift &= ~shiftcode[data&~0x80];
         return 0;
@@ -156,7 +165,7 @@ char Console::keyboard_getc(void)
         else if ('A' <= c && c <= 'Z')
             c += 'a' - 'A';
     }
-    
+
     return c;
 }
 
@@ -318,7 +327,7 @@ size_t Console::driver_read(off_t pos, void* buffer, size_t size)
     return (uint32_t)ptr - (uint32_t)buffer;
 }
 
-void Console::isr(int vector)
+void Console::isr(int vector, void *param)
 {
     char c;
     base_t level;
@@ -329,7 +338,7 @@ void Console::isr(int vector)
     {
         c = con->keyboard_getc();
 
-        if(c == 0)
+        if(c == 0 || c == -1)
         {
             break;
         }

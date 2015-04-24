@@ -1,3 +1,11 @@
+/*
+ * (C) 2015 Copyright by Jacob Chen.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
 #ifndef _COS_H
 #define _COS_H
 
@@ -18,11 +26,12 @@
 #include <cos/runtime.h>
 #include <cos/scheduler.h>
 #include <cos/thread.h>
-#include <cos/device.h>
 #include <cos/timer.h>
 #include <cos/idle.h>
-#include <cos/ipc.h>
-#include <cos/semaphore.h>
+
+#include <cos/device/device.h>
+#include <cos/ipc/ipc.h>
+#include <cos/ipc/semaphore.h>
 #endif
 
 

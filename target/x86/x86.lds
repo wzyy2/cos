@@ -4,8 +4,10 @@ ENTRY(_start)
 
 SECTIONS
 {
+    /* Begin putting sections at 1 MiB, a conventional place for kernels to be
+      loaded at by the bootloader. */
     . = 0x00100000;
-    
+
     . = ALIGN(4);
     /* code(readonly) */
     .text :

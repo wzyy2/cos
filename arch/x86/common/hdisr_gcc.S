@@ -47,6 +47,7 @@ HDINTERRUPTFNC(irq15, 15)
 .globl interrupt_enter
 .globl interrupt_leave
 .globl isr_table
+.globl isr_param
 .globl thread_switch_interrupt_flag
 .globl interrupt_from_thread
 .globl interrupt_to_thread
@@ -66,12 +67,19 @@ _hdinterrupts:
 	addl $0x2c, %eax      /* move to vector address */
 	movl (%eax), %eax     /* vector(eax) = *eax */
 
+        movl %eax, %ecx
+        shll $0x2, %ecx       /* each item takes up 4bytes in isr_param. */
+        movl $isr_param, %ebx /* ebx = &isr_param[0] */
+        addl %ecx, %ebx       /* eax = &isr_param[vector] */
+        pushl (%ebx)   /* push argument : isr_param[vector] */
+
 	pushl %eax            /* push argument : int vector */
 	shll $0x2, %eax       /* each item takes up 4bytes in isr_table. */
+
 	movl $isr_table, %ebx /* ebx = &isr_table[0] */
 	addl %eax, %ebx       /* eax = &isr_table[vector] */
 	call *(%ebx)
-	add $4, %esp          /* restore argument */
+        add $8, %esp          /* restore argument */
 
 	call interrupt_leave
 

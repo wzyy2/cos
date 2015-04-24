@@ -1,4 +1,12 @@
-#include "cos/semaphore.h"
+/*
+ * (C) 2015 Copyright by Jacob Chen.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
+#include "cos/ipc/semaphore.h"
 #include <cos/cos.h>
 
 
@@ -9,8 +17,6 @@
  * @param name the name of semaphore
  * @param value the init value of semaphore
  * @param flag the flag of semaphore
- *
- * @return the operation status, ERR_OK on successful
  */
 Semaphore::Semaphore(const char *name,
                      uint32_t value,

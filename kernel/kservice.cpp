@@ -1,3 +1,11 @@
+/*
+ * (C) 2015 Copyright by Jacob Chen.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
 #include "cos/kservice.h"
 
 #include <cos/cos.h>
@@ -23,7 +31,7 @@ void show_version(void)
     printk("\\_____| \\_____/ /_____/ \n");
     printk(" %d.%d.%d build %s\n",
                C_VERSION, C_SUBVERSION, C_REVISION, __DATE__);
-    printk(" 2015 - 2021 Copyright by Jacob Chen \n");
+    printk(" 2015 Copyright by Jacob Chen \n");
 }
 
 /*

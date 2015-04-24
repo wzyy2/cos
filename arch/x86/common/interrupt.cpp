@@ -1,3 +1,11 @@
+/*
+ * (C) 2015 Copyright by Jacob Chen.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
 #include <cos/cos.h>
 #include <arch/arch.h>
 
@@ -8,6 +16,7 @@ uint32_t thread_switch_interrupt_flag = 0;
 
 /* exception and interrupt handler table */
 isr_handler_t isr_table[MAX_HANDLERS];
+void *isr_param[MAX_HANDLERS];
 uint16_t irq_mask_8259A = 0xFFFF;
 
 /* Interrupt descriptor table.  (Must be built at run time because
@@ -149,6 +158,8 @@ void arch_interrupt_init()
 {
     arch_idt_init();
     arch_pic_init();
+
+    arch_interrupt_umask(INT2);
 }
 
 void arch_interrupt_umask(int vector)
@@ -171,6 +182,7 @@ isr_handler_t arch_interrupt_install(int vector, isr_handler_t new_handler, void
     if(vector < MAX_HANDLERS)
     {
         old_handler = isr_table[vector];
+        isr_param[vector] = param;
         if (new_handler != NULL) isr_table[vector] = new_handler;
     }
 

@@ -2,9 +2,10 @@
 #define MULTIBOOT_HEADER_MAGIC      0x1BADB002
 
 /* the flags for the multiboot header.  */
-#define MULTIBOOT_HEADER_FLAGS      0x00000003
+#define MULTIBOOT_HEADER_FLAGS      0x00000007
 
-#define CONFIG_STACKSIZE            8192
+/* 16KB */
+#define CONFIG_STACKSIZE            0x4000
 
 /**
  * @addtogroup x86
@@ -29,13 +30,28 @@ multiboot_header:
     .long   MULTIBOOT_HEADER_FLAGS
     /* checksum */
     .long   -(MULTIBOOT_HEADER_MAGIC + MULTIBOOT_HEADER_FLAGS)
+    .long 0, 0, 0, 0, 0
+    /* mode_type */
+    .long   0x00
+    /* width */
+    .long   640
+    /* height */
+    .long   480
+    /* depth */
+    .long   16
 
 multiboot_entry:
-    movl    $(_end + 0x1000),%esp
+    movl    $(_end + CONFIG_STACKSIZE),%esp
 
     /* reset eflags.  */
     pushl   $0
     popf
+
+    /* push the pointer to the multiboot information structure.  */
+    pushl   %ebx
+
+    /* push the magic value.  */
+    pushl   %eax
 
     /*rebuild globe describe table*/
     lgdt    mygdtdesc
@@ -47,12 +63,6 @@ multiboot_entry:
     ljmp    $0x08, $relocated
 
 relocated:
-    /* push the pointer to the multiboot information structure.  */
-    pushl   %ebx
-
-    /* push the magic value.  */
-    pushl   %eax
-
     call    main
 
     /* never get here */

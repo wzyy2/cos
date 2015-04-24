@@ -1,7 +1,16 @@
+/*
+ * (C) 2015 Copyright by Jacob Chen.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
 #include <cos/cos.h>
 #include <arch/arch.h>
 
 #include "console.h"
+#include "serial.h"
 
 extern unsigned long _end;
 
@@ -21,9 +30,9 @@ void app_init();
 
 void entry(void *p)
 {
-    int a = 0;
 
-    while(1) {
+
+    while(0) {
         printk("hello! %d\n", 111);
         Thread::sleep(2000);
         //Thread::sleep(2000);
@@ -32,17 +41,27 @@ void entry(void *p)
 
 void entry2(void *p)
 {
-    int a = 0,b;
+    char buf[500];
+    bzero(buf, 500);
+    Device *serial = Serial::find("COM1");
     while(1) {
-        printk("hello! 222222%d\n", 111);
-        Thread::sleep(4000);
-        Thread::sleep(4000);
+        //uint8_t ret=0;
+//        uint8_t ret = serial->read(0, buf, 255);
+//        if(ret > 0)
+//            printk("hello! %d\n", buf[0]);
+        Thread::sleep(200);
+
     }
 }
 
-int main(){
+
+int main(unsigned long magic, multiboot_info_t *mbt)
+{
     /* clear .bss */
     clear_bss();
+
+    /* get multiboot information*/
+    setup_multiboot(magic, mbt);
 
     /* init hardware interrupt */
     arch_interrupt_init();
@@ -55,8 +74,8 @@ int main(){
     Runtime::boot_strap();
 
     /* init the console*/
-    Console::Instance();
-    console_set_device("console");
+    new Serial("COM1", COM1);
+    console_set_device("COM1");
 
     /* show system version info*/
     show_version();

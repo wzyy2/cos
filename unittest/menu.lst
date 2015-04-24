@@ -1,0 +1,10 @@
+default 0
+timeout 30
+title rtt on 32M.img
+    root (hd0,0)
+    kernel (hd0,0)/boot/rtthread.elf
+    boot
+title cos on 32M.img
+    root (hd0,0)
+    kernel (hd0,0)/boot/cos.elf
+    boot

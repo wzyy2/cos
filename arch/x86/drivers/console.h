@@ -1,7 +1,7 @@
 #ifndef _CONSOLE_H
 #define _CONSOLE_H
 
-#include <cos/device.h>
+#include <cos/device/device.h>
 
 class Console : public Device
 {
@@ -17,7 +17,7 @@ public:
     err_t driver_init();
     size_t driver_write(off_t pos, const void * buffer, size_t size);
     size_t driver_read(off_t pos, void* buffer, size_t size);
-    static void isr(int vector);
+    static void isr(int vector, void *param);
 
     void hw_init(void);
     void hw_output(const char* str);
@@ -30,16 +30,16 @@ private:
     uint16_t *crt_buf_;
     int16_t  crt_pos_;
 
-    static const unsigned int CONSOLE_RX_BUFFER_SIZE = 128;
+    static const unsigned int CONSOLE_RX_BUFFER_SIZE = 256;
     uint8_t  rx_buffer_[Console::CONSOLE_RX_BUFFER_SIZE];
     uint32_t read_index_, save_index_;
 
     Console();
     ~Console();
 
-    static int shiftcode[256];
+    static uint8_t shiftcode[256];
 
-    static int togglecode[256];
+    static uint8_t togglecode[256];
 
     const static char normalmap[256];
 

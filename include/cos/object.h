@@ -1,3 +1,11 @@
+/*
+ * (C) 2015 Copyright by Jacob Chen.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
@@ -14,6 +22,9 @@ public:
     {
         Object_Class_Semaphore, /**< The object is a semaphore. */
         Object_Class_Mutex, /**< The object is a mutex. */
+        Object_Class_Event, /**< The object is a event. */
+        Object_Class_MailBox,   /**< The object is a mail box. */
+        Object_Class_MessageQueue,  /**< The object is a message queue. */
         Object_Class_Timer,  /**< The object is a timer. */
         Object_Class_Device,    /**< The object is a device */
         Object_Class_Thread,    /**< The object is a thread */
