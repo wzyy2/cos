@@ -9,12 +9,12 @@ public:
     Mouse(const char *name);
     ~Mouse();
 
-private:
     unsigned char mouse_cycle_ = 0;     //unsigned char
     signed char mouse_byte_[3];    //signed char
     signed char mouse_x_ = 0;         //signed char
     signed char mouse_y_ = 0;         //signed char
 
+private:
     static void isr(int vector, void *param);
     void wait(uint8_t a_type);
     void write(uint8_t a_write);

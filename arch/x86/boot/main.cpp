@@ -12,6 +12,9 @@
 #include "console.h"
 #include "serial.h"
 
+#include <gui_interface.h>
+
+
 extern unsigned long _end;
 
 extern unsigned char __bss_start[];
@@ -30,25 +33,21 @@ void app_init();
 
 void entry(void *p)
 {
-
-
     while(0) {
         printk("hello! %d\n", 111);
         Thread::sleep(2000);
         //Thread::sleep(2000);
     }
 }
-
+char mem[640*480*2];
+#include "GUI.h"
 void entry2(void *p)
 {
     char buf[500];
     bzero(buf, 500);
-    Device *serial = Serial::find("COM1");
+    //Device *serial = Serial::find("COM1");
+
     while(1) {
-        //uint8_t ret=0;
-//        uint8_t ret = serial->read(0, buf, 255);
-//        if(ret > 0)
-//            printk("hello! %d\n", buf[0]);
         Thread::sleep(200);
 
     }
@@ -68,7 +67,7 @@ int main(unsigned long magic, multiboot_info_t *mbt)
 
     /* init memory system */
     /* RAM 32M */
-    system_heap_init((void *)&__bss_end, (void *)(1024UL*1024*8));
+    system_heap_init((void *)&__bss_end, (void *)(1024UL*1024*32));
 
     /* init the c\c++ runtime environment */
     Runtime::boot_strap();

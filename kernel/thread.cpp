@@ -253,9 +253,9 @@ err_t Thread::sleep(tick_t tick)
  *
  * @return ERR_OK
  */
-err_t Thread::delay(tick_t tick)
+err_t Thread::delay(tick_t ms)
 {
-    return sleep(tick);
+    return sleep(ms * CONFIG_TICK_PER_SECOND / 1000);
 }
 
 

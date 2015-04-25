@@ -2,9 +2,24 @@ Import('settings')
 from building import *
 
 cwd = GetCurrentDir()
-src = Glob('*.c') + Glob('*.cpp') + Glob('*.S') 
-CPPPATH = [cwd]
+gui = os.path.join(cwd, "GUI")
 
+src = Glob('GUI/ConvertMono/*.c') + Glob('GUI/ConvertMono/*.cpp') + Glob('GUI/ConvertMono/*.S')
+src += Glob('GUI/ConvertColor/*.c') + Glob('GUI/ConvertColor/*.cpp') + Glob('GUI/ConvertColor/*.S')
+src += Glob('GUI/Core/*.c') + Glob('GUI/Core/*.cpp') + Glob('GUI/Core/*.S')
+src += Glob('GUI/Font/*.c') + Glob('GUI/Font/*.cpp') + Glob('GUI/Font/*.S')
+src += Glob('*.c') + Glob('*.cpp') + Glob('*.S')
+src += Glob('GUI/LCDDriver/*.c') + Glob('GUI/LCDDriver/*.cpp') + Glob('GUI/LCDDriver/*.S')
+
+src += Glob('GUI/WM/*.c') + Glob('GUI/WM/*.cpp') + Glob('GUI/WM/*.S')
+src += Glob('GUI/Widget/*.c') + Glob('GUI/Widget/*.cpp') + Glob('GUI/Widget/*.S')
+src += Glob('GUI/AntiAlias/*.c') + Glob('GUI/AntiAlias/*.cpp') + Glob('GUI/AntiAlias/*.S')
+src += Glob('GUI/MemDev/*.c') + Glob('GUI/MemDev/*.cpp') + Glob('GUI/MemDev/*.S')
+
+CPPPATH = [cwd, os.path.join(cwd, "Config"), os.path.join(gui, "ConvertMono")
+,os.path.join(gui, "ConvertColor"),os.path.join(gui, "Core"),os.path.join(gui, "Font"),os.path.join(gui, "LCDDriver")]
+
+CPPPATH += [os.path.join(gui, "WM"), os.path.join(gui, "Widget"), os.path.join(gui, "AntiAlias"), os.path.join(gui, "MemDev")]
 
 group = DefineGroup('gui', src, depend = ['CONFIG_GUI'],
                     CPPPATH = CPPPATH)

@@ -13,6 +13,7 @@
 #include <sys/time.h>
 #include "libc.h"
 
+volatile int __errno;
 
 void libc_system_init(const char* tty_name)
 {

@@ -100,7 +100,7 @@ void operator delete[] (void *ptr)
 	kfree(ptr);
 }
 
-extern "C" void __pure_virtual()
+extern "C" void __cxa_pure_virtual()
 {
 	printk("pure virtual function call\n");
 }

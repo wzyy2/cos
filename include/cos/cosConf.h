@@ -8,6 +8,7 @@
 #define CONFIG_NAME_NAX 32
 #define COS_DEBUG y
 #define CONFIG_TICK_PER_SECOND 1000
+#define CONFIG_GUI y
 
 #endif /* _COSCONF_H  */
 

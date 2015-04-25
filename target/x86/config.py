@@ -1,5 +1,6 @@
 BuildOptions = {
     'CONFIG_STDLIB' : 'y',
+    'CONFIG_GUI' : 'y',
     'COS_DEBUG' : 'y',
     #'COS_DEBUG_SCHEDULER' : '1',
 

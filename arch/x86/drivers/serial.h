@@ -1,6 +1,3 @@
-#ifndef SERIAL_H
-#define SERIAL_H
-
 /*
  * (C) 2015 Copyright by Jacob Chen.
  *
@@ -9,6 +6,9 @@
  * published by the Free Software Foundation.
  *
  */
+#ifndef SERIAL_H
+#define SERIAL_H
+
 #include <cos/device/device.h>
 
 class Serial : public Device

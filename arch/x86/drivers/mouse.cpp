@@ -45,6 +45,13 @@ void Mouse::isr(int vector, void *param) //struct regs *a_r (not used but just t
         mouse->mouse_cycle_ = 0;
         break;
     }
+
+    /* invoke callback */
+    if (mouse->rx_indicate_ != NULL)
+    {
+        mouse->rx_indicate_(mouse, 0);
+    }
+
 }
 
 void Mouse::wait(uint8_t a_type) //unsigned char
@@ -110,7 +117,6 @@ void Mouse::install()
     outb(0x64, 0x20);
     wait(0);
     _status=(inb(0x60) | 2);
-    printk("%d\n", _status);
     wait(1);
     outb(0x64, 0x60);
     wait(1);

@@ -136,7 +136,7 @@ extern multiboot_info_t *boot_info;
 
 extern vbe_info_t *vbe_info;
 
-extern mode_info_t *vga_info;
+extern mode_info_t *display_info;
 
 #ifdef __cplusplus
 }
