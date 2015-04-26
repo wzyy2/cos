@@ -19,6 +19,18 @@ public:
           uint8_t  flag);
     ~Event();
 
+    err_t control(uint8_t cmd, void *arg);
+    err_t recv(uint32_t  set,
+                           uint8_t   option,
+                           int32_t   timeout,
+                           uint32_t *recved);
+    err_t send(uint32_t set);
+
+
+    static const uint8_t FLAG_AND       =      0x01;   /**< logic and */
+    static const uint8_t FLAG_OR       =        0x02;     /**< logic or */
+    static const uint8_t FLAG_CLEAR    =        0x04;       /**< clear flag */
+
 private:
     uint32_t  set_;  /**< event set */
 };

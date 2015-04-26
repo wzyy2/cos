@@ -24,6 +24,9 @@ public:
     friend class Scheduler;
     friend class IPC;
     friend class Semaphore;
+    friend class Event;
+    friend class Mutex;
+
 
     friend void tick_increase(void);
     friend err_t get_errno(void);
@@ -98,6 +101,10 @@ private:
     Timer *thread_timer_;                       /**< built-in thread timer */
 
     uint32_t user_data_;                              /**< private user data beyond this thread */
+
+    /* thread event */
+    uint32_t event_set_;
+    uint8_t  event_info_;
 
     coslib::RBTree<Thread *>::Node  *node_;
     coslib::List<Thread *>::Node  *list_node_;

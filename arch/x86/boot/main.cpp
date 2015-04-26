@@ -30,10 +30,12 @@ static void clear_bss(void)
 }
 
 void app_init();
+Mutex *aa;
 
 void entry(void *p)
 {
-    while(0) {
+
+    while(1) {
         printk("hello! %d\n", 111);
         Thread::sleep(2000);
         //Thread::sleep(2000);
@@ -48,6 +50,7 @@ void entry2(void *p)
     //Device *serial = Serial::find("COM1");
 
     while(1) {
+        printk("hello! %d\n", 2222);
         Thread::sleep(200);
 
     }

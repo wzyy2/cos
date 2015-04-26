@@ -91,6 +91,9 @@ namespace coslib{
                 return NULL;
         }
 
+        Node *begin(){
+            return _pHead;
+        }
 
         void push_back(Node *p);
         void erase(Node *p);

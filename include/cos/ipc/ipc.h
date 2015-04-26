@@ -33,7 +33,7 @@ public:
     err_t list_resume();
     err_t list_resume_all();
 
-private:
+protected:
 
     coslib::List<Thread *> suspend_list_;  /**< the suspend thread list */
 };

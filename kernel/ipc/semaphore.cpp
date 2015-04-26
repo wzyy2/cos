@@ -28,25 +28,8 @@ Semaphore::Semaphore(const char *name,
 
 Semaphore::~Semaphore()
 {
-    detach();
+
 }
-
-/**
- * This function will detach a semaphore from resource management
- *
- * @return the operation status, ERR_OK on successful
- */
-err_t Semaphore::detach()
-{
-    /* wakeup all suspend threads */
-    IPC::list_resume_all();
-
-    /* detach semaphore object */
-    Object::detach();
-
-    return ERR_OK;
-}
-
 
 /**
  * This function will take a semaphore, if the semaphore is unavailable, the

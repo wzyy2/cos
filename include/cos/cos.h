@@ -34,6 +34,10 @@
 
 #include <cos/ipc/ipc.h>
 #include <cos/ipc/semaphore.h>
+#include <cos/ipc/event.h>
+#include <cos/ipc/mutex.h>
+#include <cos/ipc/mailbox.h>
+#include <cos/ipc/messagequeue.h>
 
 #endif
 

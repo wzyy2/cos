@@ -18,7 +18,8 @@ IPC::IPC(object_class_type type, const char *name)
 
 IPC::~IPC()
 {
-
+    /* wakeup all suspend threads */
+    IPC::list_resume_all();
 }
 
 

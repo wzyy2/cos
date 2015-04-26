@@ -36,7 +36,7 @@ CFLAGS = DEVICE + ' -Wall'
 AFLAGS = ' -c' + DEVICE + ' -x assembler-with-cpp'
 LFLAGS = DEVICE + '  -nodefaultlibs -nostartfiles -Wl,--gc-sections,-Map=target/x86/x86.map,-cref,-u,_start -T target/x86/x86.lds'
 
-CXXFLAGS = " -std=c++11 -ffreestanding -fno-builtin -nostdinc++ -fno-rtti -fno-exceptions -fno-threadsafe-statics"
+CXXFLAGS = " -std=c++11 -ffreestanding -nostdinc++ -fno-rtti -fno-exceptions -fno-threadsafe-statics"
 
 # -nostdinc++
 

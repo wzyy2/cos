@@ -6,7 +6,7 @@
  * published by the Free Software Foundation.
  *
  */
-#include "cos/ipc/event.h"
+#include "cos/ipc/messagequeue.h"
 #include <cos/cos.h>
 
 /**
@@ -16,14 +16,14 @@
  * @param name the name of event
  * @param flag the flag of event
  */
-MailBox::MailBox(const char *name,
-             uint8_t  flag):IPC(Object::Object_Class_Event, name)
-{
-    flag_ = flag;
-
-}
-
-MailBox::~MailBox()
+MessageQueue::MessageQueue(const char *name,
+                           uint8_t  flag):IPC(Object::Object_Class_MessageQueue, name)
 {
 
 }
+
+MessageQueue::~MessageQueue()
+{
+
+}
+
