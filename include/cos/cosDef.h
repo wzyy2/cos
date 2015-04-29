@@ -132,7 +132,7 @@ typedef void (*init_fn_t)(void);
 /**
  * @ingroup BasicDef
  *
- * @def COS_ALIGN(size, align)
+ * @def WIDTH_ALIGN(size, align)
  * Return the most contiguous size aligned at specified width. COS_ALIGN(13, 4)
  * would return 16.
  */
@@ -141,7 +141,7 @@ typedef void (*init_fn_t)(void);
 /**
  * @ingroup BasicDef
  *
- * @def COS_ALIGN_DOWN(size, align)
+ * @def WIDTH_ALIGN_DOWN(size, align)
  * Return the down number of aligned at specified width. COS_ALIGN_DOWN(13, 4)
  * would return 12.
  */

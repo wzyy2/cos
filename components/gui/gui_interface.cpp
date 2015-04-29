@@ -58,6 +58,8 @@ static err_t mouse_rx(Device *dev, size_t size)
         cycle = mouse->mouse_cycle_ - 1;
     }
     GUI_MOUSE_DRIVER_PS2_OnRx(mouse->mouse_byte_[cycle]);
+
+    return ERR_OK;
 }
 
 ALIGN(4)

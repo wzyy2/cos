@@ -21,7 +21,7 @@ public:
 
 private:
 
-    static uint8_t thread_stack[1024];
+    static uint8_t thread_stack[1024 * 4];
 
     Idle();
     ~Idle();

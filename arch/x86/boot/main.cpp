@@ -41,7 +41,7 @@ void entry(void *p)
         //Thread::sleep(2000);
     }
 }
-char mem[640*480*2];
+
 #include "GUI.h"
 void entry2(void *p)
 {
@@ -52,7 +52,6 @@ void entry2(void *p)
     while(1) {
         printk("hello! %d\n", 2222);
         Thread::sleep(200);
-
     }
 }
 
@@ -69,8 +68,8 @@ int main(unsigned long magic, multiboot_info_t *mbt)
     arch_interrupt_init();
 
     /* init memory system */
-    /* RAM 32M */
-    system_heap_init((void *)&__bss_end, (void *)(1024UL*1024*32));
+    /* RAM bss-128M  for Zone Normal*/
+    system_heap_init((void *)&__bss_end, (void *)(1024UL*1024*128));
 
     /* init the c\c++ runtime environment */
     Runtime::boot_strap();
@@ -105,18 +104,13 @@ int main(unsigned long magic, multiboot_info_t *mbt)
     return 0;
 }
 
-ALIGN(4)
-uint8_t thread_stack[1024 * 2];
-ALIGN(4)
-uint8_t thread2_stack[1024 * 2];
+
 
 void app_init()
 {
-    Thread *test = new Thread("test", entry, NULL, &thread_stack[0] \
-            , sizeof(thread_stack), Scheduler::THREAD_PRIORITY_MAX - 2, 30);
+    Thread *test = new Thread("test", entry, NULL, 1024 * 8, Scheduler::THREAD_PRIORITY_MAX - 2, 30);
     test->startup();
 
-    Thread *test2 = new Thread("te2st2", entry2, NULL, &thread2_stack[0] \
-            , sizeof(thread2_stack), Scheduler::THREAD_PRIORITY_MAX - 3, 30);
+    Thread *test2 = new Thread("te2st2", entry2, NULL, 1024 * 8, Scheduler::THREAD_PRIORITY_MAX - 3, 30);
     test2->startup();
 }

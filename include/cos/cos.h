@@ -16,7 +16,7 @@
 #include <arch/arch.h>
 
 #include <cos/irq.h>
-#include <cos/sysheap.h>
+#include <cos/mem.h>
 #include <cos/kservice.h>
 #include <cos/init.h>
 #include <cos/clock.h>

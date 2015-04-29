@@ -11,6 +11,7 @@
 #include <cos/cos.h>
 #include <cos/ipc/semaphore.h>
 
+#if 0
 
 static size_t used_mem, max_mem;
 
@@ -476,3 +477,5 @@ void list_mem(void)
     printk("used memory : %d\n", used_mem);
     printk("maximum allocated memory: %d\n", max_mem);
 }
+
+#endif

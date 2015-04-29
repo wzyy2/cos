@@ -61,7 +61,7 @@ err_t IPC::list_resume(){
     Thread *thread = suspend_list_.front();
 
     if(thread == NULL)
-        return ERR_ERROR;
+        return -ERR_ERROR;
 
     COS_DEBUG_LOG(COS_DEBUG_IPC, ("resume thread:%s\n", thread->name()));
     /* resume it */
@@ -79,7 +79,8 @@ err_t IPC::list_resume(){
  *
  * @return the operation status, ERR_OK on successful
  */
-err_t IPC::list_resume_all(){
+err_t IPC::list_resume_all()
+{
     Thread *thread;
     register ubase_t temp;
 
@@ -91,6 +92,9 @@ err_t IPC::list_resume_all(){
 
         /* get next suspend thread */
         thread = suspend_list_.front();
+
+        suspend_list_.erase(thread->list_node_);
+
         /* set error code to ERR_ERROR */
         thread->error_ = -ERR_ERROR;
 

@@ -102,8 +102,6 @@ static void video_init()
         printk("ERROR : Fail to create video!\n");
         delete video;
     }
-
-    uint32_t color = 0x7722dddd;
 }
 
 INIT_DEVICE_EXPORT(video_init);

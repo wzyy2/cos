@@ -16,6 +16,11 @@
 extern "C" {
 #endif
 
+/* memory management option */
+#define CONFIG_MM_PAGE_SIZE                 4096
+#define CONFIG_MM_PAGE_MASK                 (CONFIG_MM_PAGE_SIZE - 1)
+#define CONFIG_MM_PAGE_BITS                 12
+
 
 /*
  * heap memory interface
@@ -27,7 +32,11 @@ void kfree(void *ptr);
 void *krealloc(void *ptr, size_t nbytes);
 void *kcalloc(size_t count, size_t size);
 
+void list_mem();
 
+void *get_zeroed_pages(size_t npages);
+void *page_alloc(size_t npages);
+void page_free(void *addr, size_t npages);
 
 
 #ifdef __cplusplus

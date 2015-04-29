@@ -24,7 +24,6 @@ public:
     friend class Scheduler;
     friend class IPC;
     friend class Semaphore;
-    friend class Event;
     friend class Mutex;
 
 
@@ -41,6 +40,14 @@ public:
            base_t       stack_size,
            uint8_t        priority,
            tick_t       tick);
+
+    Thread(const char       *name,
+           void (*entry)(void *parameter),
+           void             *parameter,
+           base_t       stack_size,
+           uint8_t        priority,
+           tick_t       tick);
+
     ~Thread();
 
     static err_t yield(void);
@@ -76,6 +83,17 @@ public:
     static const uint8_t CTRL_CHANGE_PRIORITY = 0x02;                /**< Change thread priority. */
     static const uint8_t CTRL_INFO = 0x03;                /**< Get thread information. */
 
+    /* error code */
+    err_t    error_;                                  /**< error code */
+    uint8_t  stat_;                                   /**< thread stat */
+    Timer *thread_timer_;                       /**< built-in thread timer */
+
+    coslib::List<Thread *>::Node  *list_node_;
+
+    /* thread event */
+    uint32_t event_set_;
+    uint8_t  event_info_;
+
 private:
     static std::set<Thread *> thread_set_;  /**< the thread set */
 
@@ -86,28 +104,18 @@ private:
     void       *stack_addr_;                             /**< stack address */
     ubase_t stack_size_;                             /**< stack size */
 
-    /* error code */
-    err_t    error_;                                  /**< error code */
-    uint8_t  stat_;                                   /**< thread stat */
-
     /* priority */
     uint8_t  current_priority_;                       /**< current priority */
     uint8_t  init_priority_;                          /**< initialized priority */
 
-
     tick_t  init_tick_;                              /**< thread's initialized tick */
     tick_t  remaining_tick_;                         /**< remaining tick */
 
-    Timer *thread_timer_;                       /**< built-in thread timer */
-
     uint32_t user_data_;                              /**< private user data beyond this thread */
 
-    /* thread event */
-    uint32_t event_set_;
-    uint8_t  event_info_;
+    bool delete_stack_flag_ = false;
 
     coslib::RBTree<Thread *>::Node  *node_;
-    coslib::List<Thread *>::Node  *list_node_;
 };
 
 

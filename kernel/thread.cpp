@@ -69,10 +69,74 @@ Thread::Thread(const char       *name,
     list_node_ = new coslib::List<Thread *>::Node (this);
 }
 
+/**
+ * This function will initialize a thread, normally it's used to initialize a
+ * static thread object.
+ *
+ * @param name the name of thread, which shall be unique
+ * @param entry the entry function of thread
+ * @param parameter the parameter of thread enter function
+ * @param stack_size the size of thread stack
+ * @param priority the priority of thread
+ * @param tick the time slice if there are same priority thread
+ *
+ */
+Thread::Thread(const char       *name,
+               void (*entry)(void *parameter),
+               void             *parameter,
+               base_t       stack_size,
+               uint8_t        priority,
+               tick_t       tick):Object(Object_Class_Thread, name)
+{
+    entry_ = (void *)entry;
+    parameter_ = parameter;
+
+    /* stack init */
+    stack_addr_ = kmalloc(stack_size);
+
+    if(stack_addr_ != NULL) {
+        delete_stack_flag_ = true;
+    } else {
+        set_errno(-ERR_ERROR);
+        printk("ERROR : malloc stack failed.\n");
+    }
+
+    stack_size_ = stack_size;
+
+    /* init thread stack */
+    memset(stack_addr_, '#', stack_size_);
+    sp_ = (void *)arch_stack_init(entry_, parameter_,
+                                  (uint8_t *)((char *)stack_addr_ + stack_size_ - 4),
+                                  (void *)exit);
+
+    /* priority init */
+    init_priority_    = priority;
+    current_priority_ = priority;
+
+    /* tick init */
+    init_tick_      = tick;
+    remaining_tick_ = tick;
+
+    /* error and flags */
+    error_ = ERR_OK;
+    stat_  = THREAD_INIT;
+
+    /* initialize cleanup function and user data */
+    user_data_ = 0;
+
+    /* init thread timer */
+    thread_timer_ = new Timer(name, Thread::timeout, this, 0, Timer::FLAG_ONE_SHOT);
+
+    node_ = new coslib::RBTree<Thread *>::Node (current_priority_, this);
+    list_node_ = new coslib::List<Thread *>::Node (this);
+}
+
 Thread::~Thread()
 {
     detach(false);
     delete thread_timer_;
+    if(delete_stack_flag_)
+        kfree(stack_addr_);
 }
 
 void Thread::exit(void)

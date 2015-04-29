@@ -11,7 +11,7 @@
 #include <cos/cos.h>
 
 ALIGN(CONFIG_ALIGN_SIZE)
-uint8_t Idle::thread_stack[1024];
+uint8_t Idle::thread_stack[1024 * 4];
 
 Idle::Idle():Thread("idle", entry, NULL, &Idle::thread_stack[0] \
                     , sizeof(thread_stack), Scheduler::THREAD_PRIORITY_MAX - 1, 32)
