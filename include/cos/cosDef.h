@@ -118,7 +118,7 @@ typedef void (*init_fn_t)(void);
 /* error code definitions */
 #define ERR_OK                          0               /**< There is no error */
 #define ERR_ERROR                       1               /**< A generic error happens */
-#define ERR_TIMEOUT                     2               /**< Timed out */
+#define ERR_OUTTIME                     2               /**< Timed out */
 #define ERR_FULL                        3               /**< The resource is full */
 #define ERR_EMPTY                       4               /**< The resource is empty */
 #define ERR_NOMEM                       5               /**< No memory */

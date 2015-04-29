@@ -6,7 +6,7 @@
  * published by the Free Software Foundation.
  *
  */
-#include "cos/sysheap.h"
+#include "cos/mem.h"
 
 #include <cos/cos.h>
 #include <cos/ipc/semaphore.h>

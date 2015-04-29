@@ -11,6 +11,9 @@ public:
             void        *msgpool,
             size_t    size,
             uint8_t  flag);
+    MailBox(const char *name,
+            size_t    size,
+            uint8_t  flag);
     ~MailBox();
 
 
@@ -27,6 +30,8 @@ private:
     uint16_t    entry_;                         /**< index of messages in msg_pool */
     uint16_t    in_offset_;                     /**< input offset of the message buffer */
     uint16_t    out_offset_;                    /**< output offset of the message buffer */
+
+    bool delete_pool_flag_;
 
     coslib::List<Thread *>  suspend_sender_thread_;         /**< sender thread suspended on this mailbox */
 

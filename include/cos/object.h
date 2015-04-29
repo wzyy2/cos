@@ -35,12 +35,20 @@ public:
     virtual  ~Object();
     const char *name();
 
+    uint16_t get_flag() {
+        return flag_;
+    };
+
+    std::map<std::string, Object *> get_infomation(object_class_type which){
+        return object_container_[which];
+    }
+
 protected:
     void detach();
     static Object *find(const char *name, object_class_type type);
 
     uint16_t flag_ = 0;      /**< flag of kernel object */
-    char  name_[CONFIG_NAME_NAX];    /**< name of kernel object */
+    char  name_[CONFIG_NAME_MAX];    /**< name of kernel object */
     object_class_type type_;   /**< type of kernel object */
 
 private:

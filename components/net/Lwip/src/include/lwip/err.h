@@ -39,13 +39,11 @@
 extern "C" {
 #endif
 
+#include <cos/cosDef.h>
+
 /** Define LWIP_ERR_T in cc.h if you want to use
  *  a different type for your platform (must be signed). */
-#ifdef LWIP_ERR_T
-typedef LWIP_ERR_T err_t;
-#else /* LWIP_ERR_T */
-typedef s8_t err_t;
-#endif /* LWIP_ERR_T*/
+
 
 /* Definitions for error constants. */
 

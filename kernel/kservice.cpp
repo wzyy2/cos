@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 
-static Device *_console_device = NULL;
+Device *_console_device = NULL;
 
 /* global errno in cos */
 static volatile int _errno;
@@ -589,7 +589,7 @@ void printk(const char *fmt, ...)
         length = CONFIG_CONSOLEBUF_SIZE - 1;
 
     if(_console_device != NULL) {
-        if(_length !=0){
+        if(_length != 0){
             _console_device->write(0, _log_buf, _length);
             _length = 0;
         }

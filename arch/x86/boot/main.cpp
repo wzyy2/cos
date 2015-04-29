@@ -29,33 +29,6 @@ static void clear_bss(void)
         *dst++ = 0;
 }
 
-void app_init();
-Mutex *aa;
-
-void entry(void *p)
-{
-
-    while(1) {
-        printk("hello! %d\n", 111);
-        Thread::sleep(2000);
-        //Thread::sleep(2000);
-    }
-}
-
-#include "GUI.h"
-void entry2(void *p)
-{
-    char buf[500];
-    bzero(buf, 500);
-    //Device *serial = Serial::find("COM1");
-
-    while(1) {
-        printk("hello! %d\n", 2222);
-        Thread::sleep(200);
-    }
-}
-
-
 int main(unsigned long magic, multiboot_info_t *mbt)
 {
     /* clear .bss */
@@ -84,11 +57,8 @@ int main(unsigned long magic, multiboot_info_t *mbt)
     /* init systick */
     arch_tick_init();
 
-    /* export function runtime Initialization*/
+    /* Export function runtime Initialization */
     export_runtime_init();
-
-    /* init application */
-    app_init();
 
     /* init idle thread */
     Idle::init();
@@ -104,13 +74,3 @@ int main(unsigned long magic, multiboot_info_t *mbt)
     return 0;
 }
 
-
-
-void app_init()
-{
-    Thread *test = new Thread("test", entry, NULL, 1024 * 8, Scheduler::THREAD_PRIORITY_MAX - 2, 30);
-    test->startup();
-
-    Thread *test2 = new Thread("te2st2", entry2, NULL, 1024 * 8, Scheduler::THREAD_PRIORITY_MAX - 3, 30);
-    test2->startup();
-}

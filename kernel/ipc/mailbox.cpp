@@ -29,9 +29,33 @@ MailBox::MailBox(const char *name,
     out_offset_ = 0;
 }
 
+MailBox::MailBox(const char *name,
+                 size_t    size,
+                 uint8_t  flag):IPC(Object::Object_Class_Event, name)
+{
+    flag_ = flag;
+    msg_pool_ = (uint32_t *) kmalloc(size);
+
+    if(msg_pool_ != NULL) {
+        delete_pool_flag_ = true;
+    } else {
+        set_errno(-ERR_ERROR);
+        printk("ERROR : malloc msg_pool failed.\n");
+    }
+
+
+    size_ = size;
+    entry_ = 0;
+    in_offset_ = 0;
+    out_offset_ = 0;
+}
+
 MailBox::~MailBox()
 {
     resume_all();
+
+    if(delete_pool_flag_)
+        kfree(msg_pool_);
 }
 
 err_t MailBox::resume_all()

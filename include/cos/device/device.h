@@ -102,6 +102,9 @@ public:
     static const uint8_t  CTRL_RTC_GET_ALARM  =  0x12;            /**< get alarm */
     static const uint8_t  CTRL_RTC_SET_ALARM  =  0x13;            /**< set alarm */
 
+    device_class_type get_type() {
+        return type_;
+    }
 
 protected:
     virtual err_t driver_init(){

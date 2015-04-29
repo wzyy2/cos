@@ -31,6 +31,7 @@
 
 #include <cos/device/device.h>
 #include <cos/device/graphic_device.h>
+#include <cos/device/eth_device.h>
 
 #include <cos/ipc/ipc.h>
 #include <cos/ipc/semaphore.h>
