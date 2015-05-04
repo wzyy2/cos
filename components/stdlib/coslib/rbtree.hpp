@@ -60,7 +60,7 @@ namespace coslib{
             }
 
             inline bool isNil() { return (this == RBTree<T>::nil); }
-            inline T  getObj() { return this->obj; }
+            inline T getObj() { return this->obj; }
             inline void setBlack() { this->color = BLACK; }
             inline void setRed() { this->color = RED; }
             inline Color getColor() { return this->color; }
@@ -392,7 +392,7 @@ namespace coslib{
             delete this->root;
         }
 
-        T  lookup(long key)
+        T lookup(long key)
         {
             if (NULL == this->root)
                 return NULL;
@@ -451,14 +451,12 @@ namespace coslib{
             return true;
         }
 
-
         int size()
         {
             if(root == NULL)
                 return 0;
             return root->count_size();
         }
-
 
     };
 

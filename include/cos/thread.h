@@ -50,7 +50,6 @@ public:
 
     ~Thread();
 
-    static err_t yield(void);
     static void exit(void);
     static void timeout(void *parameter);
     static err_t sleep(tick_t tick);
@@ -94,9 +93,7 @@ public:
     uint32_t event_set_;
     uint8_t  event_info_;
 
-private:
-    static std::set<Thread *> thread_set_;  /**< the thread set */
-
+protected:
     /* stack point and entry */
     void       *sp_;                                     /**< stack point */
     void       *entry_;                                  /**< entry */
@@ -114,8 +111,6 @@ private:
     uint32_t user_data_;                              /**< private user data beyond this thread */
 
     bool delete_stack_flag_ = false;
-
-    coslib::RBTree<Thread *>::Node  *node_;
 };
 
 

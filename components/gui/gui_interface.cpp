@@ -65,7 +65,7 @@ static err_t mouse_rx(Device *dev, size_t size)
 ALIGN(4)
 static uint8_t thread_stack[1024 * 32];
 
-void gui_entry(void *p)
+static void gui_entry(void *p)
 {
     GUI_SetBkColor(GUI_BLUE); //设置背景颜色
     GUI_SetColor(GUI_WHITE); //设置前景颜色，及字体和绘图的颜色

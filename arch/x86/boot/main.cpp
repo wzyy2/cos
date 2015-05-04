@@ -57,6 +57,9 @@ int main(unsigned long magic, multiboot_info_t *mbt)
     /* init systick */
     arch_tick_init();
 
+    /* init scheduler */
+    Scheduler::init();
+
     /* Export function runtime Initialization */
     export_runtime_init();
 

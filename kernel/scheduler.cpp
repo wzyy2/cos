@@ -15,14 +15,22 @@ int16_t Scheduler::lock_nest_ = 0;
 Thread *Scheduler::current_thread_ = NULL;
 uint8_t Scheduler::current_priority_ = THREAD_PRIORITY_MAX - 1;
 
-coslib::RBTree<Thread *> Scheduler::thread_tree_;
+coslib::RBTree<coslib::List<Thread *> *> Scheduler::priority_tree_;
 
 coslib::List<Thread *> Scheduler::defunct_list_;
 
+coslib::RBTree<coslib::List<Thread *> *>::Node *Scheduler::ready_table_[Scheduler::THREAD_PRIORITY_MAX];
 
 Thread *Scheduler::get_current_thread()
 {
     return current_thread_;
+}
+
+void Scheduler::init()
+{
+    for(int i = 0; i < THREAD_PRIORITY_MAX; i++) {
+        ready_table_[i] = new coslib::RBTree<coslib::List<Thread *> *>::Node(i, new coslib::List<Thread *>());
+    }
 }
 
 void Scheduler::start()
@@ -30,7 +38,7 @@ void Scheduler::start()
     register Thread *to_thread;
 
     /* get switch to thread */
-    to_thread = thread_tree_.min();
+    to_thread = next_thread();
 
     current_thread_ = to_thread;
 
@@ -38,7 +46,7 @@ void Scheduler::start()
     arch_context_switch_to((ubase_t)&to_thread->sp_);
 
     /* never come back */
-};
+}
 
 /**
  * This function will perform one schedule. It will select one thread
@@ -57,7 +65,7 @@ void Scheduler::process()
     if (lock_nest_ == 0)
     {
         /* get switch to thread */
-        to_thread = thread_tree_.min();
+        to_thread = next_thread();
 
         /* if the destination thread is not the same as current thread */
         if (to_thread != current_thread_)
@@ -92,7 +100,7 @@ void Scheduler::process()
 
     /* enable interrupt */
     arch_interrupt_enable(level);
-};
+}
 
 /**
  * This function will insert a thread to system ready queue. The state of
@@ -113,19 +121,24 @@ void Scheduler::insert_thread(Thread *thread)
     /* change stat */
     thread->stat_ = Thread::THREAD_READY;
 
-    /* insert thread to ready set */
-    thread_tree_.insert(thread->node_);
+    auto node = ready_table_[thread->current_priority_];
+    auto list = node->getObj();
+
+    if(list->empty()) {
+        /* insert node to priority tree */
+        priority_tree_.insert(ready_table_[thread->current_priority_]);
+    }
+
+    list->push_back(thread->list_node_);
 
     /* set priority mask */
     COS_DEBUG_LOG(COS_DEBUG_SCHEDULER, ("insert thread[%s], the priority: %d\n",
                                       thread->name_, thread->current_priority_));
 
 
-    //rt_thread_ready_priority_group |= thread->number_mask_;
-
     /* enable interrupt */
     arch_interrupt_enable(temp);
-};
+}
 
 /**
  * This function will remove a thread from system ready queue.
@@ -147,12 +160,28 @@ void Scheduler::remove_thread(Thread *thread)
                                       thread->name_,
                                       thread->current_priority_));
 
-    /* remove thread from ready list */
-    thread_tree_.remove(thread->node_);
+    auto node = ready_table_[thread->current_priority_];
+    auto list = node->getObj();
+
+    list->erase(thread->list_node_);
+
+    if(list->empty()) {
+        /* remove node from priority tree */
+        priority_tree_.remove(ready_table_[thread->current_priority_]);
+    }
 
     /* enable interrupt */
     arch_interrupt_enable(temp);
-};
+}
+
+/**
+ * This function will return next ready thread.
+ */
+Thread *Scheduler::next_thread()
+{
+    Thread *to_thread = priority_tree_.min()->front();
+    return to_thread;
+}
 
 /**
  * This function will lock the thread scheduler.
@@ -172,7 +201,7 @@ void Scheduler::enter_critical()
 
     /* enable interrupt */
     arch_interrupt_enable(level);
-};
+}
 
 /**
  * This function will unlock the thread scheduler.
@@ -200,7 +229,7 @@ void Scheduler::exit_critical()
         arch_interrupt_enable(level);
     }
 
-};
+}
 
 /**
  * Get the scheduler lock level
@@ -210,7 +239,7 @@ void Scheduler::exit_critical()
 uint16_t Scheduler::critical_level()
 {
     return lock_nest_;
-};
+}
 
 /**
  * This function will insert a thread to system delete list.
@@ -226,4 +255,42 @@ void Scheduler::insert_defunct_thread(Thread *thread)
 void Scheduler::remove_defunct_thread(Thread *thread)
 {
     defunct_list_.erase(thread->list_node_);
+}
+
+/**
+ * This function will be called in systick.
+ */
+void Scheduler::inclock(tick_t tick)
+{
+    Thread *thread;
+    base_t level;
+
+    thread = current_thread_;
+    if(thread != NULL) {
+        -- thread->remaining_tick_;
+        if (thread->remaining_tick_ == 0)
+        {
+            /* else change to initialized tick */
+            thread->remaining_tick_ = thread->init_tick_;
+
+            /* disable interrupt */
+            level = arch_interrupt_disable();
+
+            /* if the thread stat is READY and on ready queue set */
+            if (thread->stat_ == Thread::THREAD_READY)
+            {
+                /* put thread to end of ready queue */
+
+                /* enable interrupt */
+                arch_interrupt_enable(level);
+
+                Scheduler::process();
+
+                return;
+            }
+
+            /* enable interrupt */
+            arch_interrupt_enable(level);
+        }
+    }
 }

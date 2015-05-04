@@ -24,6 +24,7 @@ public:
     static void start();
     static void insert_thread(Thread *thread);
     static void remove_thread(Thread *thread);
+    static Thread *next_thread();
 
     static void insert_defunct_thread(Thread *thread);
     static void remove_defunct_thread(Thread *thread);
@@ -32,14 +33,13 @@ public:
     static void exit_critical();
     static uint16_t critical_level();
 
+    static void inclock(tick_t tick);
+
     static Thread *get_current_thread();
 
     static const uint8_t THREAD_PRIORITY_MAX = 255;
 
-
     static coslib::List<Thread *> defunct_list_;  /**< the defunct thread list */
-
-
 private:
     Scheduler();
     ~Scheduler();
@@ -49,7 +49,9 @@ private:
 
     static int16_t lock_nest_;
 
-    static coslib::RBTree<Thread *> thread_tree_;  /**< the thread tree */
+    static coslib::RBTree<coslib::List<Thread *> *> priority_tree_;
+
+    static coslib::RBTree<coslib::List<Thread *> *>::Node *ready_table_[Scheduler::THREAD_PRIORITY_MAX];
 
 };
 

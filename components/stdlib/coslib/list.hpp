@@ -26,21 +26,22 @@ namespace coslib{
         private:
             T _value; /* data, can be any data type, but use integer for easiness */
             Node *_pNext; /* pointer to the next Node */
+            Node *_pPrev; /* pointer to the next Node */
 
         public:
             /* Constructors with No Arguments */
             Node(void)
-                : _pNext(NULL)
+                : _pNext(NULL), _pPrev(NULL)
             { }
 
             /* Constructors with a given value */
             Node(T val)
-                : _value(val), _pNext(NULL)
+                : _value(val), _pNext(NULL), _pPrev(NULL)
             { }
 
             /* Constructors with a given value and a link of the next Node */
-            Node(T val, Node* next)
-                : _value(val), _pNext(next)
+            Node(T val, Node *next, Node *prev)
+                : _value(val), _pNext(next), _pPrev(NULL)
             {}
 
             /* Getters */
@@ -136,35 +137,37 @@ namespace coslib{
         }
         else
         {
+            if(_pTail == p)
+                return;
+
             /* Append the new Node to the tail */
             _pTail->_pNext = p;
-            /* Update the tail pointer */
-            _pTail = _pTail->_pNext;
 
+            p->_pPrev = _pTail;
             p->_pNext = NULL;
+
+            /* Update the tail pointer */
+            _pTail = p;
         }
     }
 
     template<class T> void List<T>::erase(List<T>::Node *p)
     {
-        List<T>::Node *tmp = _pHead;
         if(_pHead == p){
             _pHead = p->_pNext;
+            _pHead->_pPrev = NULL;
+            return;
+        }
+        if(_pTail == p){
+            _pTail = p->_pPrev;
+            _pTail->_pNext = NULL;
             return;
         }
 
-        while(tmp != NULL){
-            if(tmp->_pNext == p){
-                tmp->_pNext = p->_pNext;
-                if(_pTail == p){
-                    _pTail = tmp;
-                }
-            }
-            tmp = tmp->_pNext;
-        }
-
-        p->_pNext = NULL;
-
+        p->_pNext->_pPrev = p->_pPrev;
+        p->_pPrev->_pNext = p->_pNext;
+        p->_pPrev == NULL;
+        p->_pNext == NULL;
     }
 }
 #endif // LIST_HPP

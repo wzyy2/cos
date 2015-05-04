@@ -65,7 +65,6 @@ Thread::Thread(const char       *name,
     /* init thread timer */
     thread_timer_ = new Timer(name, Thread::timeout, this, 0, Timer::FLAG_ONE_SHOT);
 
-    node_ = new coslib::RBTree<Thread *>::Node (current_priority_, this);
     list_node_ = new coslib::List<Thread *>::Node (this);
 }
 
@@ -127,7 +126,6 @@ Thread::Thread(const char       *name,
     /* init thread timer */
     thread_timer_ = new Timer(name, Thread::timeout, this, 0, Timer::FLAG_ONE_SHOT);
 
-    node_ = new coslib::RBTree<Thread *>::Node (current_priority_, this);
     list_node_ = new coslib::List<Thread *>::Node (this);
 }
 
@@ -135,6 +133,7 @@ Thread::~Thread()
 {
     detach(false);
     delete thread_timer_;
+
     if(delete_stack_flag_)
         kfree(stack_addr_);
 }
@@ -232,48 +231,6 @@ err_t Thread::detach(bool delete_later)
 }
 
 /**
- * This function will let current thread yield processor, and scheduler will
- * choose a highest thread to run. After yield processor, the current thread
- * is still in READY state.
- *
- * @return ERR_OK
- *
- * @note This function  will be called in interrupt status.
- */
-err_t Thread::yield(void)
-{
-    base_t level;
-    Thread *thread;
-
-    /* disable interrupt */
-    level = arch_interrupt_disable();
-
-    /* set to current thread */
-    thread = Scheduler::get_current_thread();
-
-    /* if the thread stat is READY and on ready queue set */
-    if (thread->stat_ == THREAD_READY)
-    {
-        /* remove thread from thread set */
-        //Scheduler::remove_thread(thread);
-        /* put thread to end of ready queue */
-        //Scheduler::insert_thread(thread);
-
-        /* enable interrupt */
-        arch_interrupt_enable(level);
-
-        Scheduler::process();
-
-        return ERR_OK;
-    }
-
-    /* enable interrupt */
-    arch_interrupt_enable(level);
-
-    return ERR_OK;
-}
-
-/**
  * This function will let current thread sleep for some ticks.
  *
  * @param tick the sleep ticks
@@ -352,20 +309,12 @@ err_t Thread::control(uint8_t cmd, void *arg)
             /* change thread priority */
             current_priority_ = *(uint8_t *)arg;
 
-            /* recalculate priority attribute */
-            //thread->number_mask = 1 << thread->current_priority;
-
             /* insert thread to schedule queue again */
             Scheduler::insert_thread(this);
         }
         else
         {
             current_priority_ = *(uint8_t *)arg;
-
-            /* recalculate priority attribute */
-
-            //thread->number_mask = 1 << thread->current_priority;
-
         }
         /* enable interrupt */
         arch_interrupt_enable(temp);
@@ -440,7 +389,6 @@ err_t Thread::resume()
     temp = arch_interrupt_disable();
 
     /* remove from suspend list */
-
 
     thread_timer_->stop();
 
