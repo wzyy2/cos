@@ -12,15 +12,25 @@
 static void shell_entry(void *p)
 {
     while(1) {
-        Thread::sleep(CONFIG_TICK_PER_SECOND/50);
+        //Thread::sleep(CONFIG_TICK_PER_SECOND);
+        printk("111\n");
     }
 }
 
-
+static void shell_entry2(void *p)
+{
+    while(1) {
+        //Thread::sleep(CONFIG_TICK_PER_SECOND);
+        printk("222\n");
+    }
+}
 static void shell_init()
 {
     Thread *shell = new Thread("shell", shell_entry, NULL, 1024 * 4, Scheduler::THREAD_PRIORITY_MAX - 2, 30);
     shell->startup();
+
+    Thread *shell2 = new Thread("shell2", shell_entry2, NULL, 1024 * 4, Scheduler::THREAD_PRIORITY_MAX - 2, 30);
+    shell2->startup();
 }
 
 INIT_COMPONENT_EXPORT(shell_init);

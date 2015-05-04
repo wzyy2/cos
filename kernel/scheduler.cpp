@@ -111,7 +111,7 @@ void Scheduler::process()
  */
 void Scheduler::insert_thread(Thread *thread)
 {
-    register base_t temp;
+    base_t temp;
 
     COS_ASSERT(thread != NULL);
 
@@ -149,7 +149,7 @@ void Scheduler::insert_thread(Thread *thread)
  */
 void Scheduler::remove_thread(Thread *thread)
 {
-    register base_t temp;
+    base_t temp;
 
     COS_ASSERT(thread != NULL);
 
@@ -180,6 +180,7 @@ void Scheduler::remove_thread(Thread *thread)
 Thread *Scheduler::next_thread()
 {
     Thread *to_thread = priority_tree_.min()->front();
+
     return to_thread;
 }
 
@@ -266,10 +267,12 @@ void Scheduler::inclock(tick_t tick)
     base_t level;
 
     thread = current_thread_;
+
     if(thread != NULL) {
         -- thread->remaining_tick_;
         if (thread->remaining_tick_ == 0)
         {
+
             /* else change to initialized tick */
             thread->remaining_tick_ = thread->init_tick_;
 
@@ -279,7 +282,11 @@ void Scheduler::inclock(tick_t tick)
             /* if the thread stat is READY and on ready queue set */
             if (thread->stat_ == Thread::THREAD_READY)
             {
-                /* put thread to end of ready queue */
+                /* put thread to end of ready table */
+                auto node = ready_table_[thread->current_priority_];
+                auto list = node->getObj();
+                list->erase(thread->list_node_);
+                list->push_back(thread->list_node_);
 
                 /* enable interrupt */
                 arch_interrupt_enable(level);

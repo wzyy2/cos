@@ -155,7 +155,8 @@ namespace coslib{
     {
         if(_pHead == p){
             _pHead = p->_pNext;
-            _pHead->_pPrev = NULL;
+            if(_pHead != NULL)
+                _pHead->_pPrev = NULL;
             return;
         }
         if(_pTail == p){
